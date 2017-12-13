@@ -5,11 +5,11 @@ python:
 
 install:
   - pip install -r requirements.txt
-  #- pip install coveralls
+  - pip install pytest-cov
+  - pip install coveralls
 
 script:
   - pytest
-  #- coverage run --source=gestion manage.py test gestion
 
 after_success:
-  #- coveralls
+  - coveralls
