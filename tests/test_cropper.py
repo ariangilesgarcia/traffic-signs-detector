@@ -1,7 +1,7 @@
 import cv2
-import urllib
 import unittest
 import numpy as np
+import urllib.request
 
 from .context import detector
 from detector.cropper import Cropper
