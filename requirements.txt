@@ -1,2 +1,8 @@
+attrs==17.3.0
 numpy==1.13.3
 opencv-python==3.3.0.10
+pluggy==0.6.0
+py==1.5.2
+pytest==3.3.1
+randomcolor==0.4.4.5
+six==1.11.0
