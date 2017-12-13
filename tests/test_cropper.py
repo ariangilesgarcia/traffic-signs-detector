@@ -1,4 +1,7 @@
+import cv2
+import urllib
 import unittest
+import numpy as np
 
 from .context import detector
 from detector.cropper import Cropper
@@ -228,10 +231,6 @@ class TestCropper:
 
 
     def test_expand_and_crop(self):
-        import cv2
-        import urllib.request
-        import numpy as np
-
         crop_percent = 0.1
         force_square = True
 
