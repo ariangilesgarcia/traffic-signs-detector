@@ -1,3 +1,4 @@
+import cv2
 
 
 class Cropper:
@@ -47,5 +48,17 @@ class Cropper:
         return new_coords
 
 
-    def crop_image(self):
-        pass
+    def expand_and_crop(self, image, coordinates):
+        # Get separate values
+        x1, y1, x2, y2 = coordinates
+
+        # Get image size
+        h, w, _ = image.shape
+
+        # Expand coordinates
+        x1, y1, x2, y2 = self.expand_coordinates(coordinates, (w, h))
+
+        # Crop image
+        image = image[y1:y2, x1:x2]
+
+        return image
