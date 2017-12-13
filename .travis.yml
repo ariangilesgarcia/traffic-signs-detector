@@ -10,6 +10,7 @@ install:
 
 script:
   - pytest
+  - coverage run --source=pytest
 
 after_success:
   - coveralls
