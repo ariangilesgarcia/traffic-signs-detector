@@ -227,3 +227,36 @@ class TestCropper:
         expected_coordinates = (495, 985, 605, 1080)
 
         assert expanded_coordinates == expected_coordinates
+
+
+    def test_expand_and_crop(self):
+        import cv2
+        import urllib.request
+        import numpy as np
+
+        crop_percent = 0.1
+        force_square = True
+
+        test_image_url = 'https://www.pyimagesearch.com/wp-content/uploads/2015/01/opencv_logo.png'
+        response = urllib.request.urlopen(test_image_url)
+        image = np.asarray(bytearray(response.read()), dtype="uint8")
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+
+        h, w, _ = image.shape
+
+        x1 = 100
+        y1 = 50
+
+        width = 200
+        height = 300
+
+        original_coordinates = (x1, y1, x1 + width, y1 + height)
+
+        crp = Cropper(crop_percent, force_square)
+
+        crop_image =  crp.expand_and_crop(image, original_coordinates)
+
+        crop_h, crop_w, _ = crop_image.shape
+
+        assert crop_h == 330
+        assert crop_w == 330
