@@ -13,7 +13,7 @@ Detection default format:
 """
 
 
-def convert_detection_to_csv(detection, incldue_label=False, include_confidence=False):
+def convert_detection_to_csv(detection, include_label=False, include_confidence=False):
     label = detection['label']
     class_id = detection['class_id']
     confidence = detection['confidence']
@@ -21,7 +21,7 @@ def convert_detection_to_csv(detection, incldue_label=False, include_confidence=
 
     detection_items = []
 
-    detetion_items.append(class_id)
+    detection_items.append(class_id)
     if include_label:
         detection_items.append(label)
     if include_confidence:
@@ -29,7 +29,9 @@ def convert_detection_to_csv(detection, incldue_label=False, include_confidence=
 
     detection_items.extend(coordinates)
 
-    csv_detecion = ', '.join(detection_items)
+    detection_items = [str(x) for x in detection_items]
+
+    csv_detection = ', '.join(detection_items)
 
     return csv_detection
 
@@ -39,7 +41,9 @@ def convert_detection_to_yolo(detection, image_size):
     class_id = detection['class_id']
 
     relative_coordinates = convert_coordinates_to_relative(coordinates, image_size)
-    yolo_detection = ' '.join(relative_coordinates)
+    label_items = [str(x) for x in relative_coordinates]
+    label_items.insert(0, str(class_id))
+    yolo_detection = ' '.join(label_items)
 
     return yolo_detection
 
