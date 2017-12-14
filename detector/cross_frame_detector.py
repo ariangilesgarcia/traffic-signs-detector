@@ -7,66 +7,51 @@ class CrossFrameDetector:
         # Number of object classes for the CFD to detect
         self.num_classes = num_classes
 
-        # Objects must be correctly detected in <frames_threshold>
-        # out of the <frame_history_count> latest frames in order
-        # to be deteceted by the CrossFrameDetector
-        self.frame_history_count = frame_history_count
+        # Objects must be in <frames_threshold>
         self.frames_threshold = frames_threshold
+        # out of the <frame_history_count> latest frames
+        self.frame_history_count = frame_history_count
 
-        # Matrix of size <frame_history_count> x <num_classes>
-        # Each row represents detections of a frame
-        # Each column represents an object class
-        self.last_detections = np.zeros(shape=(self.frame_history_count, self.num_classes))
+        # Rows represents detections in a frame, columns represents object classes
+        self.detection_history = np.zeros(shape=(self.frame_history_count, self.num_classes))
 
-        # Detection mask
+        # Detection mask keeps track of detected object classes
         self.detection_mask = np.zeros(shape=(self.num_classes))
 
-        # Count, decrements 1 each frame
+        # Determins how 'long' the sign will be detected for
         self.detection_mask_limit = 100
 
 
     def register_detections(self, detections):
-        """
-        Update detection counter.
-        Given a list with the detected signs, it updates the detections
-        counter used for filtering out false positives.
-        Args:
-            detected_signs_list (list): array of detections.
-        Returns:
-            detections (list): list of actually detected classes id.
-        """
+        # List of ids of detected classes
+        detected_object_classes = []
 
+        # Populate list with the detections
         for detection in detections:
-            detected_signs_list
+            detected_object_classes.append(detection['class_id'])
 
+        # Move everything one row up and complete the last row with the current detections
+        self.detection_history = np.roll(self.detection_history, -1, axis=0)
+        self.detection_history[self.frame_history_count - 1, :] = 0
+        self.detection_history[self.frame_history_count - 1, detected_object_classes] = 1
 
-        self.last_detections = np.roll(self.last_detections, -1, axis=0)
-        self.last_detections[self.frame_count - 1, :] = 0
-        self.last_detections[self.frame_count - 1, detected_signs_list] = 1
+        # Sum detections over all rows and get de CFD detections
+        frames_sum = np.sum(self.detection_history, axis=0)
+        detected_classes_ids = np.where(frames_sum >= self.frames_threshold)
 
-        frames_sum = np.sum(self.last_detections, axis=0)
-        detected_classes_ids = np.where(frames_sum > self.frame_detection_thresh)
-
+        # If class was not detected, make the mask 1
         for detected_class in detected_classes_ids[0]:
             if self.detection_mask[detected_class] == 0:
                 self.detection_mask[detected_class] = 1
 
+        # If class was already detected just add one to the mask
         self.detection_mask[self.detection_mask > 0] += 1
 
+        # If class already pass the mask limit, make it 0
         self.detection_mask[self.detection_mask > self.detection_mask_limit] = 0
 
-        detections = self.get_detections()
 
-        return detections
-
-"""
     def get_detections(self):
-        \"""
-        Get actually detected signs.
-        Returns:
-            detected_classes_ids (list): list of actually detected classes id.
-        \"""
-
-        detected_classes_ids = np.where(self.detection_mask > 0)
-        return detected_classes_ids
-"""
+        # Get ids of the classes detected by the CFD
+        detected_classes_ids = np.where(self.detection_mask > 0)[0]
+        return detected_classes_ids.tolist()
