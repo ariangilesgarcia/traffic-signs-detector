@@ -5,7 +5,6 @@ import randomcolor
 
 class Plotter:
 
-
     def __init__(self, num_classes, bgr=False):
         # Generate color for each class
         rand_color = randomcolor.RandomColor()
