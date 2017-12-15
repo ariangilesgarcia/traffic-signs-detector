@@ -27,7 +27,7 @@ class TestPlotter:
             }
         ]
 
-        test_image_path = 'data/test.jpg'
+        test_image_path = 'tests/data/test.jpg'
         image = cv2.imread(test_image_path)
 
         drawn_image = plt.plot_detections(image, test_detections)
@@ -53,7 +53,7 @@ class TestPlotter:
             }
         ]
 
-        test_image_path = 'data/test.jpg'
+        test_image_path = 'tests/data/test.jpg'
         image = cv2.imread(test_image_path)
 
         drawn_image = plt.plot_detections(image, test_detections)
@@ -79,7 +79,7 @@ class TestPlotter:
             }
         ]
 
-        test_image_path = 'data/test.jpg'
+        test_image_path = 'tests/data/test.jpg'
         image = cv2.imread(test_image_path)
 
         drawn_image = plt.plot_detections(image, test_detections, draw_confidence=True)
@@ -105,7 +105,7 @@ class TestPlotter:
             }
         ]
 
-        test_image_path = 'data/test.jpg'
+        test_image_path = 'tests/data/test.jpg'
         image = cv2.imread(test_image_path)
 
         drawn_image = plt.plot_detections(image, test_detections)
