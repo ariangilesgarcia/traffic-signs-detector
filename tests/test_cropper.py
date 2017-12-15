@@ -233,7 +233,7 @@ class TestCropper:
         crop_percent = 0.1
         force_square = True
 
-        test_image_path = 'data/test.jpg'
+        test_image_path = 'tests/data/test.jpg'
         image = cv2.imread(test_image_path)
 
         h, w, _ = image.shape
