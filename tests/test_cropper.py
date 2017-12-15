@@ -1,7 +1,6 @@
 import cv2
 import unittest
 import numpy as np
-import urllib.request
 
 from .context import detector
 from detector.cropper import Cropper
@@ -234,10 +233,8 @@ class TestCropper:
         crop_percent = 0.1
         force_square = True
 
-        test_image_url = 'https://www.pyimagesearch.com/wp-content/uploads/2015/01/opencv_logo.png'
-        response = urllib.request.urlopen(test_image_url)
-        image = np.asarray(bytearray(response.read()), dtype="uint8")
-        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        test_image_path = 'data/test.jpg'
+        image = cv2.imread(test_image_path)
 
         h, w, _ = image.shape
 
