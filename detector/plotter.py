@@ -33,7 +33,7 @@ class Plotter:
             class_id += 1
 
 
-    def plot_detections(self, image, detections, draw_label=False, draw_confidence=False):
+    def plot_detections(self, image, detections, draw_confidence=False):
          for detection in detections:
             x1, y1, x2, y2 = detection['coordinates']
             label_id = detection['class_id']
