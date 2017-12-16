@@ -57,8 +57,9 @@ class Cropper:
 
         # Expand coordinates
         x1, y1, x2, y2 = self.expand_coordinates(coordinates, (w, h))
+        new_coords = [x1, y1, x2, y2]
 
         # Crop image
         image = image[y1:y2, x1:x2]
 
-        return image
+        return new_coords, image
