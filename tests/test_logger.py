@@ -19,7 +19,7 @@ class TestLogger:
 
         log = Logger()
 
-        output_filename = 'output.csv'
+        output_filename = 'tests/data/output.csv'
         log.save_detections_to_csv(test_detection, output_filename)
 
         expected_output = '16, 200, 100, 300, 200'
@@ -40,7 +40,7 @@ class TestLogger:
 
         log = Logger()
 
-        output_filename = 'output.txt'
+        output_filename = 'tests/data/output.txt'
         image_size = (1000, 1000)
 
         log.save_detections_to_yolo(test_detection, image_size, output_filename)
@@ -64,7 +64,7 @@ class TestLogger:
 
         log = Logger()
 
-        output_filename = 'output.json'
+        output_filename = 'tests/data/output.json'
 
         log.save_detections_to_json(test_detection, output_filename)
 
