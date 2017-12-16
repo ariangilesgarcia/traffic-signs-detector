@@ -33,7 +33,7 @@ class Plotter:
             class_id += 1
 
 
-    def plot_detections(self, image, detections, draw_confidence=False):
+    def plot_detections(self, image, detections, output=None, draw_confidence=False):
          for detection in detections:
             x1, y1, x2, y2 = detection['coordinates']
             label_id = detection['class_id']
@@ -54,8 +54,8 @@ class Plotter:
             scale = 1
             thickness = 2
 
-            # Get width of image
-            _, img_width, _ = image.shape
+            # Get shape of image
+            img_height, img_width, _ = image.shape
 
             # Label text variables
             if draw_confidence:
@@ -68,19 +68,29 @@ class Plotter:
             x_text = x1
             y_text = y1 - 20
 
+            x1_bg = x_text
+            y1_bg = y1
+            x2_bg = x_text + text_width
+            y2_bg = y1 - 30 - text_height
+
             if x_text + text_width > img_width:
                 x_text = img_width - text_width
 
+            if y_text - text_height < 0:
+                y_text = text_height + (y2-y1) + 20
+                y1_bg = y2
+                y2_bg = y2 + 20 + text_height
+
             # Draw rectangle as background text
             image = cv2.rectangle(image,
-                                  (x_text, y1),
-                                  (x_text+text_width, y1-30-text_height),
+                                  (x1_bg, y1_bg),
+                                  (x2_bg, y2_bg),
                                   color,
                                   bbox_thickness)
 
             image = cv2.rectangle(image,
-                                  (x_text, y1),
-                                  (x_text+text_width, y1-30-text_height),
+                                  (x1_bg, y1_bg),
+                                  (x2_bg, y2_bg),
                                   color,
                                   -1)
 
@@ -92,5 +102,9 @@ class Plotter:
                                 scale,
                                 (255, 255, 255),
                                 thickness)
+
+            # Save image if the ouput paramter is set
+            if output:
+                cv2.imwrite(output, image)
 
          return image
