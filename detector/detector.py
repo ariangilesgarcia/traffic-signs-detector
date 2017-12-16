@@ -15,11 +15,12 @@ class Detector:
 
         for location in object_locations:
             coordinates = location['coordinates']
-            cropped_image = self.cropper.expand_and_crop(image, coordinates)
+            new_coords, cropped_image = self.cropper.expand_and_crop(image, coordinates)
+
             classified_object = self.classifier.classify_image(cropped_image)
 
             if classified_object:
-                classified_object['coordinates'] = coordinates
+                classified_object['coordinates'] = new_coords
                 classified_detections.append(classified_object)
 
         return classified_detections
