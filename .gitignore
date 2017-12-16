@@ -11,4 +11,4 @@ __pycache__/
 .ipynb_checkpoints
 
 # YOLO weights
-.weights
+*.weights
