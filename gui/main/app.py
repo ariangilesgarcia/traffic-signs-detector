@@ -12,9 +12,7 @@ class DetectorLayout(BoxLayout):
 class DetectorApp(App):
 
     def build(self):
-        Config.set('graphics', 'width', '1280')
-        Config.set('graphics', 'height', '720')
-
+        Config.set('graphics', 'fullscreen', 'auto')
         return DetectorLayout()
 
 

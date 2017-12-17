@@ -1,6 +1,7 @@
 <RoundedGrayButton@Button>:
     background_color: 0,0,0,0  # the last zero is the critical on, make invisible
     font_size: 25
+    markup: True
     canvas.before:
         Color:
             rgba: (.4,.4,.4,1) if self.state=='normal' else (0.25,.25,.25,1)  # visual feedback of press
@@ -10,14 +11,20 @@
             radius: [50,]
 
 <BigButton@Button>:
-    font_size: 50
+    font_size: 100
     background_normal: ''
+    markup: True
+    background_normal: 'button_normal.png'
+    background_down: 'button_down.png'
 
 
 <MediumButton@Button>:
     font_size: 25
     background_color: 1, 0, 0, 1
     background_normal: ''
+    markup: True
+    background_normal: 'button_normal.png'
+    background_down: 'button_down.png'
 
 
 <DetectorLayout>:
@@ -27,11 +34,19 @@
         padding: 25
         spacing: 10
 
-        Label:
-            text: '[b]DETECTOR[/b]'
-            markup: True
-            font_size: 120
+        BoxLayout:
+            orientation: 'horizontal'
             size_hint: 1, .2
+
+            Label:
+                text: '[b]DETECTOR DE OBJETOS[/b]'
+                markup: True
+                font_size: 120
+                size_hint: 1, 1
+
+            RoundedGrayButton:
+                text: ('[font=FontAwesome.otf][size=50][/size][/font]')
+                size_hint: .2, 1
 
 
         GridLayout:
@@ -41,25 +56,17 @@
             padding: 25
 
             BigButton:
-                text: 'Imagen'
                 background_color: .4, .77, .17, 1
+                text: ('[font=FontAwesome.otf][size=100][/size][/font] [b]IMAGEN[/b]')
 
             BigButton:
-                text: 'Carpeta'
                 background_color: 0, .66, 1, 1
+                text: ('[font=FontAwesome.otf][size=100][/size][/font] [b]CARPETA[/b]')
 
             BigButton:
-                text: 'Video'
                 background_color: .62, .08, .9, 1
+                text: ('[font=FontAwesome.otf][size=100][/size][/font] [b]VIDEO[/b]')
 
             BigButton:
-                text: 'Webcam'
                 background_color: .9, .08, .35, 1
-
-        AnchorLayout:
-            anchor_x: 'center'
-            size_hint: 1, .2
-
-            RoundedGrayButton:
-                text: 'Preferencias'
-                size_hint: .4, 1
+                text: ('[font=FontAwesome.otf][size=100][/size][/font] [b]WEBCAM[/b]')
