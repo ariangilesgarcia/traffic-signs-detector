@@ -1,6 +1,6 @@
 
 
-class Detector:
+class DetectionPipeline:
 
     def __init__(self, localizer, cropper, classifier):
         self.localizer = localizer
