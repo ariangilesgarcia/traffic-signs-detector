@@ -1,0 +1,65 @@
+<RoundedGrayButton@Button>:
+    background_color: 0,0,0,0  # the last zero is the critical on, make invisible
+    font_size: 25
+    canvas.before:
+        Color:
+            rgba: (.4,.4,.4,1) if self.state=='normal' else (0.25,.25,.25,1)  # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [50,]
+
+<BigButton@Button>:
+    font_size: 50
+    background_normal: ''
+
+
+<MediumButton@Button>:
+    font_size: 25
+    background_color: 1, 0, 0, 1
+    background_normal: ''
+
+
+<DetectorLayout>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        Label:
+            text: '[b]DETECTOR[/b]'
+            markup: True
+            font_size: 120
+            size_hint: 1, .2
+
+
+        GridLayout:
+            rows: 2
+            cols: 2
+            spacing: 50
+            padding: 25
+
+            BigButton:
+                text: 'Imagen'
+                background_color: .4, .77, .17, 1
+
+            BigButton:
+                text: 'Carpeta'
+                background_color: 0, .66, 1, 1
+
+            BigButton:
+                text: 'Video'
+                background_color: .62, .08, .9, 1
+
+            BigButton:
+                text: 'Webcam'
+                background_color: .9, .08, .35, 1
+
+        AnchorLayout:
+            anchor_x: 'center'
+            size_hint: 1, .2
+
+            RoundedGrayButton:
+                text: 'Preferencias'
+                size_hint: .4, 1
