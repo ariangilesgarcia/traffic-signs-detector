@@ -28,6 +28,13 @@
 
 
 <DetectorLayout>:
+    canvas.before:
+        Color:
+            rgba: .9, .9, .9, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     BoxLayout:
         orientation: 'vertical'
 
@@ -41,12 +48,13 @@
             Label:
                 text: '[b]DETECTOR DE OBJETOS[/b]'
                 markup: True
+                color: .15, .15, .15, 1
                 font_size: 120
                 size_hint: 1, 1
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=50][/size][/font]')
-                size_hint: .2, 1
+                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                size_hint: .1, 1
 
 
         GridLayout:
