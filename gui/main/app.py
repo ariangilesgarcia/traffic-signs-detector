@@ -169,6 +169,14 @@ class FolderResultScreen(Screen):
         self.ids.percentage_text.text = ''
 
 
+class DetectVideoScreen(Screen):
+    pass
+
+
+class VideoResultScreen(Screen):
+    pass
+
+
 
 # Define screen manager
 class ScreenManagement(ScreenManager):
