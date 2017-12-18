@@ -9,6 +9,7 @@ ScreenManagement:
 
     MainScreen:
     DetectImageScreen:
+    ImageResultScreen:
 
 
 # -----------------
@@ -160,5 +161,53 @@ ScreenManagement:
                 disabled: True
 
                 on_press:
+                    root.save_image_path()
                     filechooser.selection = ''
                     detect_button.disabled = True
+                    app.root.current = 'image_result'
+                    app.root.transition.direction = 'left'
+
+
+
+
+# -------------------
+# Image Result Screen
+# -------------------
+
+<ImageResultScreen>:
+    name: 'image_result'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .2
+
+            RoundedGrayButton:
+                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                size_hint: .1, 1
+                on_release:
+                    app.root.current = 'main'
+                    app.root.transition.direction = 'right'
+                    root.remove_picture()
+
+            Label:
+                text: '[b]RESULTADOS[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, 1
+
+
+        GridLayout:
+            rows: 1
+            cols: 1
+            spacing: 50
+            padding: 25
+
+            Image:
+                id: image_results
