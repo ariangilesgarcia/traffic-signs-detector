@@ -1,5 +1,6 @@
 import os
 import cv2
+import glob
 
 from kivy.app import App
 from kivy.lang import Builder
@@ -38,6 +39,7 @@ plotter = Plotter(num_classes=20, bgr=True)
 # Data manager
 class DataManager(EventDispatcher):
     image_path = StringProperty()
+    folder_path = StringProperty()
 
 
 # Define app screens
@@ -79,10 +81,54 @@ class ImageResultScreen(Screen):
         self.ids.image_results.texture = Texture.create(size=(1,1))
 
 
+class DetectFolderScreen(Screen):
+
+    def is_dir(self, directory, filename):
+        return os.path.isdir(os.path.join(directory, filename))
+
+
+    def save_folder_path(self):
+        self.manager.state_data.folder_path = self.ids.filechooser_folder.selection[0]
+
+
+class FolderResultScreen(Screen):
+
+    def on_enter(self):
+        folder_path = self.manager.state_data.folder_path
+
+        images = []
+        for extension in ('*.gif', '*.png', '*.jpg', '*.JPEG'):
+            images.extend(glob.glob(os.path.join(folder_path, extension)))
+
+        images_count = len(images)
+
+        self.ids.progress_bar.max = images_count
+        self.ids.progress_bar.value = 0
+
+        for image_path in images:
+            img = cv2.imread(image_path)
+
+            # Detect objects in image
+            detections = detector.detect_objects_in_image(img)
+            img = plotter.plot_detections(img,
+                                          detections,
+                                          draw_confidence=False)
+
+            flipped = cv2.flip(img, 0)
+            buf = flipped.tostring()
+            image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
+            image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+
+            image_filename = os.path.basename(image_path)
+            output_path = os.path.join('/home/arian/Output', image_filename)
+            cv2.imwrite(output_path, img)
+
+            self.ids.progress_bar.value += 1
+
+
 # Define screen manager
 class ScreenManagement(ScreenManager):
     state_data = ObjectProperty(DataManager())
-
 
 
 # Load .kv file

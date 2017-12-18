@@ -10,6 +10,8 @@ ScreenManagement:
     MainScreen:
     DetectImageScreen:
     ImageResultScreen:
+    DetectFolderScreen:
+    FolderResultScreen:
 
 
 # -----------------
@@ -91,6 +93,9 @@ ScreenManagement:
             BigButton:
                 background_color: 0, .66, 1, 1
                 text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]CARPETA[/b]')
+                on_release:
+                    app.root.current = 'detect_folder'
+                    app.root.transition.direction = 'left'
 
             BigButton:
                 background_color: .62, .08, .9, 1
@@ -141,6 +146,8 @@ ScreenManagement:
 
             FileChooserIconView:
                 id: filechooser
+                filters: ['*.jpg', '*.JPEG', '*.jpeg', '*.png', '*.gif']
+                path: '~/'
                 on_selection:
                     file_label.text = self.selection and self.selection[0] or ''
                     detect_button.disabled = False
@@ -204,10 +211,125 @@ ScreenManagement:
 
 
         GridLayout:
-            rows: 1
+            rows: 2
             cols: 1
             spacing: 50
             padding: 25
 
             Image:
                 id: image_results
+
+
+# -------------------
+# Detect Folder Screen
+# -------------------
+
+<DetectFolderScreen>:
+    name: 'detect_folder'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .2
+
+            RoundedGrayButton:
+                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                size_hint: .1, 1
+                on_release:
+                    app.root.current = 'main'
+                    app.root.transition.direction = 'right'
+
+            Label:
+                text: '[b]DETECTAR EN CARPETA[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, 1
+
+
+        GridLayout:
+            rows: 3
+            cols: 1
+            spacing: 50
+            padding: 25
+
+            FileChooserIconView:
+                id: filechooser_folder
+                path: '~/'
+                dirselect: True
+                filters: [root.is_dir]
+                on_selection:
+                    file_label.text = self.selection and self.selection[0] or ''
+                    detect_button.disabled = False
+
+            Label:
+                id: file_label
+                text: ''
+                halign: 'center'
+                background_color: .4, .77, .17, 1
+                font_size: 50
+                size_hint: 1, 0.3
+
+            BigButton:
+                text: 'DETECTAR'
+                id: detect_button
+                background_color: .4, .77, .17, 1
+                size_hint: 1, 0.3
+                disabled: True
+
+                on_press:
+                    root.save_folder_path()
+                    filechooser_folder.selection = ''
+                    detect_button.disabled = True
+                    app.root.current = 'folder_result'
+                    app.root.transition.direction = 'left'
+
+
+# --------------------
+# Folder Result Screen
+# --------------------
+
+<FolderResultScreen>:
+    name: 'folder_result'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .2
+
+            RoundedGrayButton:
+                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                size_hint: .1, 1
+                on_release:
+                    app.root.current = 'main'
+                    app.root.transition.direction = 'right'
+                    progress_bar.value = 0
+
+            Label:
+                text: '[b]RESULTADOS[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, 1
+
+
+        GridLayout:
+            rows: 2
+            cols: 1
+            spacing: 50
+            padding: 25
+
+            ProgressBar:
+                id: progress_bar
+                value: 0
+                max: 100
