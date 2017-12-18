@@ -71,7 +71,6 @@ class ImageResultScreen(Screen):
     def on_enter(self):
         # Show error if selected
         image_path = self.manager.state_data.image_path
-        print(image_path)
 
         _, file_extension = os.path.splitext(self.manager.state_data.image_path)
 
