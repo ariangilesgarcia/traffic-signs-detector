@@ -12,10 +12,14 @@ from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen, ScreenManager
 
+import sys
+import threading
+
+sys.path.append('../../')
+
 
 # Decetor objects
-import sys
-sys.path.append('../../')
+
 from detector.cropper import Cropper
 from detector.localizer import Localizer
 from detector.classifier import Classifier
@@ -34,6 +38,10 @@ classifier = Classifier(model_path='../../data/classifier/trafficsigns.json',
                         threshold=0.9)
 detector = DetectionPipeline(localizer, cropper, classifier)
 plotter = Plotter(num_classes=20, bgr=True)
+
+import tensorflow as tf
+
+graph = tf.get_default_graph()
 
 
 # Data manager
@@ -93,7 +101,26 @@ class DetectFolderScreen(Screen):
 
 class FolderResultScreen(Screen):
 
+    def detect_image(self, image_path):
+        img = cv2.imread(image_path)
+        detections = detector.detect_objects_in_image(img)
+        img = plotter.plot_detections(img,
+                                      detections,
+                                      draw_confidence=False)
+
+        flipped = cv2.flip(img, 0)
+        buf = flipped.tostring()
+        image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
+        image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+
+        image_filename = os.path.basename(image_path)
+        output_path = os.path.join('/home/arian/Output', image_filename)
+        cv2.imwrite(output_path, img)
+
+
     def on_enter(self):
+        self.on_screen = True
+
         folder_path = self.manager.state_data.folder_path
 
         images = []
@@ -101,29 +128,30 @@ class FolderResultScreen(Screen):
             images.extend(glob.glob(os.path.join(folder_path, extension)))
 
         images_count = len(images)
-
+        self.ids.progress_bar.max = 0
         self.ids.progress_bar.max = images_count
-        self.ids.progress_bar.value = 0
 
-        for image_path in images:
-            img = cv2.imread(image_path)
+        self.start_detection_thread(images)
 
-            # Detect objects in image
-            detections = detector.detect_objects_in_image(img)
-            img = plotter.plot_detections(img,
-                                          detections,
-                                          draw_confidence=False)
 
-            flipped = cv2.flip(img, 0)
-            buf = flipped.tostring()
-            image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
-            image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+    def start_detection_thread(self, images):
+        threading.Thread(target=self.detection_thread, args=(images,)).start()
 
-            image_filename = os.path.basename(image_path)
-            output_path = os.path.join('/home/arian/Output', image_filename)
-            cv2.imwrite(output_path, img)
 
-            self.ids.progress_bar.value += 1
+    def detection_thread(self, images):
+        for image in images:
+            global graph
+            with graph.as_default():
+                if self.on_screen:
+                    self.detect_image(image)
+                    self.ids.progress_bar.value += 1
+                else:
+                    break
+
+    def on_leave(self):
+        self.on_screen = False
+        self.ids.progress_bar.value =  0
+
 
 
 # Define screen manager
