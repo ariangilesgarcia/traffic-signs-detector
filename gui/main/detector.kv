@@ -324,12 +324,25 @@ ScreenManagement:
 
 
         GridLayout:
-            rows: 2
+            rows: 3
             cols: 1
             spacing: 50
             padding: 25
+
+            Label:
+                font_size: 350
+                color: .2, .89, .4, 1
+                id: percentage_text
+
+
+            Label:
+                font_size: 50
+                id: progress_text
+                size_hint: 1, .3
+
 
             ProgressBar:
                 id: progress_bar
                 value: 0
                 max: 100
+                size_hint: 1, .3

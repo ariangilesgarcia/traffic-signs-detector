@@ -139,18 +139,27 @@ class FolderResultScreen(Screen):
 
 
     def detection_thread(self, images):
+        image_count = len(images)
+
         for image in images:
             global graph
             with graph.as_default():
                 if self.on_screen:
                     self.detect_image(image)
                     self.ids.progress_bar.value += 1
+
+                    percentage = int(self.ids.progress_bar.value / image_count * 100)
+                    self.ids.percentage_text.text = str(percentage) + '%'
+                    self.ids.progress_text.text = image
                 else:
                     break
+
 
     def on_leave(self):
         self.on_screen = False
         self.ids.progress_bar.value =  0
+        self.ids.progress_text.text = ''
+        self.ids.percentage_text.text = ''
 
 
 
