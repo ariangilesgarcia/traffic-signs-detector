@@ -133,23 +133,32 @@ ScreenManagement:
 
 
         GridLayout:
-            rows: 2
-            cols: 2
+            rows: 3
+            cols: 1
             spacing: 50
             padding: 25
 
-            BigButton:
+            FileChooserIconView:
+                id: filechooser
+                on_selection:
+                    file_label.text = self.selection and self.selection[0] or ''
+                    detect_button.disabled = False
+
+            Label:
+                id: file_label
+                text: ''
+                halign: 'center'
                 background_color: .4, .77, .17, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]IMAGEN[/b]')
+                font_size: 50
+                size_hint: 1, 0.3
 
             BigButton:
-                background_color: 0, .66, 1, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]CARPETA[/b]')
+                text: 'DETECTAR'
+                id: detect_button
+                background_color: .4, .77, .17, 1
+                size_hint: 1, 0.3
+                disabled: True
 
-            BigButton:
-                background_color: .62, .08, .9, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]VIDEO[/b]')
-
-            BigButton:
-                background_color: .9, .08, .35, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]WEBCAM[/b]')
+                on_press:
+                    filechooser.selection = ''
+                    detect_button.disabled = True
