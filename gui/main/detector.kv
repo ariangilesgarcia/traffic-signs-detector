@@ -169,8 +169,6 @@ ScreenManagement:
 
                 on_press:
                     root.save_image_path()
-                    filechooser.selection = ''
-                    detect_button.disabled = True
                     app.root.current = 'image_result'
                     app.root.transition.direction = 'left'
 
@@ -200,7 +198,6 @@ ScreenManagement:
                 on_release:
                     app.root.current = 'main'
                     app.root.transition.direction = 'right'
-                    root.remove_picture()
 
             Label:
                 text: '[b]RESULTADOS[/b]'

@@ -61,11 +61,18 @@ class DetectImageScreen(Screen):
         self.manager.state_data.image_path = self.ids.filechooser.selection[0]
 
 
+    def on_leave(self):
+        self.ids.filechooser.selection = ''
+        self.ids.detect_button.disabled = True
+
+
 class ImageResultScreen(Screen):
 
     def on_enter(self):
         # Show error if selected
         image_path = self.manager.state_data.image_path
+        print(image_path)
+
         _, file_extension = os.path.splitext(self.manager.state_data.image_path)
 
         if file_extension in ['.jpg', '.png', '.gif']:
@@ -85,7 +92,7 @@ class ImageResultScreen(Screen):
             self.ids.image_results.texture = image_texture
 
 
-    def remove_picture(self):
+    def on_leave(self):
         self.ids.image_results.texture = Texture.create(size=(1,1))
 
 
