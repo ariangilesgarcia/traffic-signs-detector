@@ -40,8 +40,8 @@ ScreenManagement:
     halign: 'center'
     background_normal: ''
     markup: True
-    background_normal: 'button_normal.png'
-    background_down: 'button_down.png'
+    background_normal: 'resources/button_normal.png'
+    background_down: 'resources/button_down.png'
 
 
 <MediumButton@Button>:
@@ -49,8 +49,8 @@ ScreenManagement:
     background_color: 1, 0, 0, 1
     background_normal: ''
     markup: True
-    background_normal: 'button_normal.png'
-    background_down: 'button_down.png'
+    background_normal: 'resources/button_normal.png'
+    background_down: 'resources/button_down.png'
 
 
 # -----------
@@ -78,7 +78,7 @@ ScreenManagement:
                 size_hint: 1, 1
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
 
 
@@ -90,28 +90,28 @@ ScreenManagement:
 
             BigButton:
                 background_color: .4, .77, .17, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]IMAGEN[/b]')
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]IMAGEN[/b]')
                 on_release:
                     app.root.current = 'detect_image'
                     app.root.transition.direction = 'left'
 
             BigButton:
                 background_color: 0, .66, 1, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]CARPETA[/b]')
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CARPETA[/b]')
                 on_release:
                     app.root.current = 'detect_folder'
                     app.root.transition.direction = 'left'
 
             BigButton:
                 background_color: .62, .08, .9, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]VIDEO[/b]')
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]VIDEO[/b]')
                 on_release:
                     app.root.current = 'detect_video'
                     app.root.transition.direction = 'left'
 
             BigButton:
                 background_color: .9, .08, .35, 1
-                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]WEBCAM[/b]')
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]WEBCAM[/b]')
 
 
 # -------------------
@@ -132,7 +132,7 @@ ScreenManagement:
             size_hint: 1, .2
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
@@ -201,7 +201,7 @@ ScreenManagement:
             size_hint: 1, .2
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
@@ -243,7 +243,7 @@ ScreenManagement:
             size_hint: 1, .2
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
@@ -313,7 +313,7 @@ ScreenManagement:
             size_hint: 1, .2
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
@@ -371,7 +371,7 @@ ScreenManagement:
             size_hint: 1, .2
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
@@ -438,7 +438,7 @@ ScreenManagement:
             size_hint: 1, .2
 
             RoundedGrayButton:
-                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
