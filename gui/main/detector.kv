@@ -1,3 +1,16 @@
+# --------------
+# Screen Manager
+# --------------
+
+ScreenManagement:
+    MainScreen:
+    DetectImageScreen:
+
+
+# -----------------
+# Custom Components
+# -----------------
+
 <RoundedGrayButton@Button>:
     background_color: 0,0,0,0  # the last zero is the critical on, make invisible
     font_size: 25
@@ -28,13 +41,12 @@
     background_down: 'button_down.png'
 
 
-<DetectorLayout>:
-    canvas.before:
-        Color:
-            rgba: .9, .9, .9, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
+# -----------
+# Main Screen
+# -----------
+
+<MainScreen>:
+    name: 'main'
 
     BoxLayout:
         orientation: 'vertical'
@@ -49,13 +61,73 @@
             Label:
                 text: '[b]DETECTOR DE OBJETOS[/b]'
                 markup: True
-                color: .15, .15, .15, 1
+                color: .85, .85, .85, 1
                 font_size: 120
                 size_hint: 1, 1
 
             RoundedGrayButton:
                 text: ('[font=FontAwesome.otf][size=100][/size][/font]')
                 size_hint: .1, 1
+
+
+        GridLayout:
+            rows: 2
+            cols: 2
+            spacing: 50
+            padding: 25
+
+            BigButton:
+                background_color: .4, .77, .17, 1
+                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]IMAGEN[/b]')
+                on_release:
+                    app.root.current = 'detect_image'
+                    app.root.transition.duration = 0.25
+                    app.root.transition.direction = 'left'
+
+            BigButton:
+                background_color: 0, .66, 1, 1
+                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]CARPETA[/b]')
+
+            BigButton:
+                background_color: .62, .08, .9, 1
+                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]VIDEO[/b]')
+
+            BigButton:
+                background_color: .9, .08, .35, 1
+                text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]WEBCAM[/b]')
+
+
+# -------------------
+# Detect Image Screen
+# -------------------
+
+<DetectImageScreen>:
+    name: 'detect_image'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .2
+
+            RoundedGrayButton:
+                text: ('[font=FontAwesome.otf][size=100][/size][/font]')
+                size_hint: .1, 1
+                on_release:
+                    app.root.current = 'main'
+                    app.root.transition.duration = 0.25
+                    app.root.transition.direction = 'right'
+
+            Label:
+                text: '[b]DETECTAR EN IMAGEN[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, 1
 
 
         GridLayout:
