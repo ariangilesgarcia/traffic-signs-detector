@@ -248,7 +248,7 @@ class TestCropper:
 
         crp = Cropper(crop_percent, force_square)
 
-        crop_image =  crp.expand_and_crop(image, original_coordinates)
+        new_coords, crop_image =  crp.expand_and_crop(image, original_coordinates)
 
         crop_h, crop_w, _ = crop_image.shape
 
