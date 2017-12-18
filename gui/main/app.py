@@ -169,12 +169,18 @@ class FolderResultScreen(Screen):
 
 
 class DetectVideoScreen(Screen):
-    pass
+
+    def save_video_path(self):
+        self.manager.state_data.video_path = self.ids.filechooser.selection[0]
+
+
+    def on_leave(self):
+        self.ids.filechooser.selection = ''
+        self.ids.detect_button.disabled = True
 
 
 class VideoResultScreen(Screen):
     pass
-
 
 
 # Define screen manager
@@ -188,6 +194,9 @@ ui = Builder.load_file('detector.kv')
 
 # DetectorApp Class
 class DetectorApp(App):
+    title = 'Detector de objectos'
+    icon = '/home/arian/stop.png'
+
 
     def build(self):
         Config.set('graphics', 'fullscreen', 'auto')
