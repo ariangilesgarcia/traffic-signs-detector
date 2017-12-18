@@ -1,8 +1,12 @@
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+
 # --------------
 # Screen Manager
 # --------------
 
 ScreenManagement:
+    transition: SlideTransition(duration=.75)
+
     MainScreen:
     DetectImageScreen:
 
@@ -81,7 +85,6 @@ ScreenManagement:
                 text: ('[font=FontAwesome.otf][size=135][/size][/font]\n[b]IMAGEN[/b]')
                 on_release:
                     app.root.current = 'detect_image'
-                    app.root.transition.duration = 0.25
                     app.root.transition.direction = 'left'
 
             BigButton:
@@ -119,7 +122,6 @@ ScreenManagement:
                 size_hint: .1, 1
                 on_release:
                     app.root.current = 'main'
-                    app.root.transition.duration = 0.25
                     app.root.transition.direction = 'right'
 
             Label:
