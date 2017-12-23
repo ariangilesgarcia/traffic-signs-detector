@@ -3,6 +3,7 @@ import cv2
 import glob
 
 from kivy.app import App
+from kivy.clock import Clock, mainthread
 from kivy.lang import Builder
 from kivy.config import Config
 from kivy.core.window import Window
@@ -14,6 +15,7 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 
 import sys
 import threading
+from functools import partial
 
 sys.path.append('../../')
 
@@ -42,6 +44,16 @@ plotter = Plotter(num_classes=20, bgr=True)
 import tensorflow as tf
 
 graph = tf.get_default_graph()
+
+
+# OpenCV image to Kivy's Texture
+def convert_to_texture(img):
+    flipped = cv2.flip(img, 0)
+    buf = flipped.tostring()
+    image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
+    image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+
+    return img
 
 
 # Data manager
@@ -180,7 +192,49 @@ class DetectVideoScreen(Screen):
 
 
 class VideoResultScreen(Screen):
-    pass
+
+    def on_enter(self):
+        self.new_frame = None
+
+        video_path = self.manager.state_data.video_path
+        self.start_detection_thread(video_path)
+
+
+    def start_detection_thread(self, video_path):
+        threading.Thread(target=self.detection_thread, args=(video_path,)).start()
+
+
+    @mainthread
+    def update_image(self, *args):
+        img = args[0]
+
+        flipped = cv2.flip(img, 0)
+        buf = flipped.tostring()
+        image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
+        image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+
+        self.ids.video_frame.texture = image_texture
+
+
+    def detection_thread(self, video_path):
+        cap = cv2.VideoCapture(0)
+
+        while(True):
+            # Capture frame-by-frame
+            ret, frame = cap.read()
+
+            # Our operations on the frame come here
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # Display the resulting frame
+            cv2.imshow('frame',gray)
+
+            if cv2.waitKey(-1) & 0xFF == ord('q'):
+                break
+
+        # When everything done, release the capture
+        cap.release()
+        cv2.destroyAllWindows()
 
 
 # Define screen manager
