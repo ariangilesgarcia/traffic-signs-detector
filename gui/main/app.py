@@ -228,10 +228,10 @@ class VideoResultScreen(Screen):
             ret, frame = cap.read()
 
             # Display the resulting frame
-            if ret:
-                cv2.imshow(window_name, frame)
-            else:
+            if not ret:
                 break
+
+            cv2.imshow(window_name, frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
