@@ -16,8 +16,16 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 import sys
 import threading
 from functools import partial
+from multiprocessing import Process
 
 sys.path.append('../../')
+
+
+# Get screen resolution
+from screeninfo import get_monitors
+
+monitor = get_monitors()[0]
+screen_w, screen_h = monitor.width, monitor.height
 
 
 # Decetor objects
@@ -201,38 +209,33 @@ class VideoResultScreen(Screen):
 
 
     def start_detection_thread(self, video_path):
-        threading.Thread(target=self.detection_thread, args=(video_path,)).start()
-
-
-    @mainthread
-    def update_image(self, *args):
-        img = args[0]
-
-        flipped = cv2.flip(img, 0)
-        buf = flipped.tostring()
-        image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
-        image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-
-        self.ids.video_frame.texture = image_texture
+        self.process = Process(target=self.detection_thread, args=(video_path,))
+        self.process.start()
+        self.process.join()
 
 
     def detection_thread(self, video_path):
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(video_path)
+
+        window_name = 'detections'
+        cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+        cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
+        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN,
+                              cv2.WINDOW_FULLSCREEN)
 
         while(True):
             # Capture frame-by-frame
             ret, frame = cap.read()
 
-            # Our operations on the frame come here
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
             # Display the resulting frame
-            cv2.imshow('frame',gray)
-
-            if cv2.waitKey(-1) & 0xFF == ord('q'):
+            if ret:
+                cv2.imshow(window_name, frame)
+            else:
                 break
 
-        # When everything done, release the capture
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
         cap.release()
         cv2.destroyAllWindows()
 
@@ -253,11 +256,11 @@ class DetectorApp(App):
 
 
     def build(self):
-        Config.set('graphics', 'fullscreen', 'auto')
         return ui
 
 
 # Create and run app
-Window.fullscreen = 'auto'
+#Window.fullscreen = 'auto'
+Window.size = (screen_w, screen_h)
 app = DetectorApp()
 app.run()
