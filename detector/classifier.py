@@ -43,9 +43,9 @@ class Classifier:
         if predictions[class_id] > self.threshold:
             # Populate the prediction object
             prediction = {
-                'class_id': class_id,
+                'class_id': int(class_id),
                 'label': self.class_map[class_id],
-                'confidence': predictions[class_id],
+                'confidence': float(predictions[class_id]),
             }
 
         return prediction
