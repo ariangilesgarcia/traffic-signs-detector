@@ -8,6 +8,7 @@ class Localizer:
             "model": cfg_path,
             "load": weights_path,
             "threshold": threshold,
+            "summary": None,
         }
 
         self.localizer_model = TFNet(options)
