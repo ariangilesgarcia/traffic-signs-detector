@@ -71,6 +71,24 @@ class Detector:
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 
+    def detect_feed(self,
+                    feed,
+                    show_output=False,
+                    output=None):
+
+        cap = cv2.VideoCapture(feed)
+
+        if show_output:
+            from screeninfo import get_monitors
+            monitor = get_monitors()[0]
+            screen_w, screen_h, = monitor.width, monitor.height
+
+            window_name = 'Detector'
+            cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+            cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
+
         while(True):
             # Capture frame-by-frame
             ret, frame = cap.read()
@@ -84,21 +102,8 @@ class Detector:
             frame = self.plotter.plot_detections(frame, detections)
 
             cfd_detections = self.cfd.get_detections()
-            cfd_detection_count = len(cfd_detections)
 
-            if cfd_detection_count > 0:
-                aux = np.zeros(shape=(250, 250*cfd_detection_count, 3), dtype='uint8')
-                start_h, start_w = 0, 0
-
-                for class_id in cfd_detections:
-                    img = self.classes_images[class_id]
-
-                    end_w = start_w + img.shape[1]
-                    aux[start_h:img.shape[0], start_w:end_w] = img
-                    start_w = start_w + img.shape[1]
-
-                frame_height, frame_width, _ = frame.shape
-                frame[frame_height-250:, :250*cfd_detection_count] = aux
+            cfd_frame = self.draw_cfd_detections(frame, cfd_detections)
 
             # Display the resulting frame
             if show_output:
@@ -119,10 +124,40 @@ class Detector:
         for image_path in images_list:
             class_id = int(os.path.basename(image_path)[:-4])
             image = cv2.imread(image_path)
+            image = cv2.copyMakeBorder(image,10,10,10,10,
+                                      cv2.BORDER_CONSTANT,
+                                      value=[0,0,0])
 
             classes_images[class_id] = image
 
         return classes_images
+
+
+    def draw_cfd_detections(self, frame, cfd_detections):
+        cfd_detection_count = len(cfd_detections)
+
+        if cfd_detection_count > 0:
+            frame_height, frame_width, _ = frame.shape
+            class_image_size = int(frame_height/4)
+
+            aux = np.zeros(shape=(class_image_size,
+                                  class_image_size*cfd_detection_count,
+                                  3),
+                           dtype='uint8')
+
+            start_h, start_w = 0, 0
+
+            for class_id in cfd_detections:
+                img = self.classes_images[class_id]
+                img = cv2.resize(img, (class_image_size, class_image_size))
+
+                end_w = start_w + img.shape[1]
+                aux[start_h:img.shape[0], start_w:end_w] = img
+                start_w = start_w + img.shape[1]
+
+            frame[frame_height-class_image_size:, :class_image_size*cfd_detection_count] = aux
+
+        return frame
 
 
 if __name__ == '__main__':
@@ -138,5 +173,4 @@ if __name__ == '__main__':
 
     detector = Detector(detection_pipeline)
 
-    video_path = '/home/arian/ruta.mp4'
-    detections = detector.detect_video(video_path, show_output=True)
+    detections = detector.detect_feed(0, show_output=True)
