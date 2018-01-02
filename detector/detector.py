@@ -5,15 +5,15 @@ import json
 import threading
 import numpy as np
 
-from logger import Logger
-from plotter import Plotter
-from cropper import Cropper
-from localizer import Localizer
-from classifier import Classifier
-from detection_pipeline import DetectionPipeline
-from cross_frame_detector import CrossFrameDetector
+from detector.logger import Logger
+from detector.plotter import Plotter
+from detector.cropper import Cropper
+from detector.localizer import Localizer
+from detector.classifier import Classifier
+from detector.detection_pipeline import DetectionPipeline
+from detector.cross_frame_detector import CrossFrameDetector
 
-from exceptions import FormatNotSupportedException
+from detector.exceptions import FormatNotSupportedException
 
 from pydub import AudioSegment
 from pydub.playback import play
@@ -29,7 +29,7 @@ class Detector:
                                       frame_history_count=5,
                                       frames_threshold=2)
 
-        self.classes_images = self.load_classes_images('../data/classifier/classes')
+        self.classes_images = self.load_classes_images('/home/arian/Projects/traffic-signs-detector/data/classifier/classes')
 
         self.notification_queue = []
 
@@ -76,6 +76,7 @@ class Detector:
             cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
             cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+            #cv2.startWindowThread()
 
             if sound_notifications:
                 sound_thread = threading.Thread(target=self.notification_thread, args=())
@@ -111,6 +112,10 @@ class Detector:
 
         cap.release()
         cv2.destroyAllWindows()
+        cv2.waitKey(1)
+        cv2.waitKey(1)
+        cv2.waitKey(1)
+        cv2.waitKey(1)
 
 
     def notification_thread(self):
@@ -118,10 +123,10 @@ class Detector:
             if len(self.notification_queue) > 0:
                 class_id = self.notification_queue.pop()
 
-                notification_sound = AudioSegment.from_mp3('../data/sounds/notification.mp3')
+                notification_sound = AudioSegment.from_mp3('/home/arian/Projects/traffic-signs-detector/data/sounds/notification.mp3')
                 play(notification_sound)
 
-                class_name_sound = AudioSegment.from_mp3('../data/sounds/'+ str(class_id) + '.mp3')
+                class_name_sound = AudioSegment.from_mp3('/home/arian/Projects/traffic-signs-detector/data/sounds/'+ str(class_id) + '.mp3')
                 play(class_name_sound)
 
 
