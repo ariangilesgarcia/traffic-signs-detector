@@ -2,6 +2,7 @@ import os
 import cv2
 import glob
 import json
+import threading
 import numpy as np
 
 from logger import Logger
@@ -14,6 +15,8 @@ from cross_frame_detector import CrossFrameDetector
 
 from exceptions import FormatNotSupportedException
 
+from pydub import AudioSegment
+from pydub.playback import play
 
 class Detector:
 
@@ -26,6 +29,20 @@ class Detector:
                                       frames_threshold=2)
 
         self.classes_images = self.load_classes_images('../data/classifier/classes')
+
+        self.notification_queue = []
+
+
+    def notification_thread(self):
+        while True:
+            if len(self.notification_queue) > 0:
+                class_id = self.notification_queue.pop()
+
+                notification_sound = AudioSegment.from_mp3('../data/sounds/notification.mp3')
+                play(notification_sound)
+
+                class_name_sound = AudioSegment.from_mp3('../data/sounds/1.mp3')
+                play(class_name_sound)
 
 
     def detect_image(self,
@@ -70,6 +87,31 @@ class Detector:
             cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
+        while(True):
+            # Capture frame-by-frame
+            ret, frame = cap.read()
+
+            if not ret:
+                break
+
+            detections = self.detection_pipeline.detect_objects_in_image(frame)
+            self.cfd.register_detections(detections)
+
+            frame = self.plotter.plot_detections(frame, detections)
+
+            all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
+            cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
+
+            # Display the resulting frame
+            if show_output:
+                cv2.imshow(window_name, frame)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cap.release()
+        cv2.destroyAllWindows()
+
 
     def detect_feed(self,
                     feed,
@@ -88,6 +130,7 @@ class Detector:
             cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
+            threading.Thread(target=self.notification_thread, args=()).start()
 
         while(True):
             # Capture frame-by-frame
@@ -101,9 +144,11 @@ class Detector:
 
             frame = self.plotter.plot_detections(frame, detections)
 
-            cfd_detections = self.cfd.get_detections()
+            all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
+            cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
 
-            cfd_frame = self.draw_cfd_detections(frame, cfd_detections)
+            for detection_id in current_cfd_detections:
+                self.notification_queue.append(detection_id)
 
             # Display the resulting frame
             if show_output:
@@ -174,3 +219,4 @@ if __name__ == '__main__':
     detector = Detector(detection_pipeline)
 
     detections = detector.detect_feed(0, show_output=True)
+    #detections = detector.detect_video('/home/arian/ruta.mp4', show_output=True)
