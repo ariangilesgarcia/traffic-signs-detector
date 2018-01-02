@@ -41,7 +41,7 @@ class Detector:
                 notification_sound = AudioSegment.from_mp3('../data/sounds/notification.mp3')
                 play(notification_sound)
 
-                class_name_sound = AudioSegment.from_mp3('../data/sounds/1.mp3')
+                class_name_sound = AudioSegment.from_mp3('../data/sounds/'+ str(class_id) + '.mp3')
                 play(class_name_sound)
 
 
@@ -87,6 +87,8 @@ class Detector:
             cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
+            threading.Thread(target=self.notification_thread, args=()).start()
+
         while(True):
             # Capture frame-by-frame
             ret, frame = cap.read()
@@ -100,6 +102,10 @@ class Detector:
             frame = self.plotter.plot_detections(frame, detections)
 
             all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
+
+            for detection_id in current_cfd_detections:
+                self.notification_queue.append(detection_id)
+
             cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
 
             # Display the resulting frame
@@ -145,10 +151,11 @@ class Detector:
             frame = self.plotter.plot_detections(frame, detections)
 
             all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
-            cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
 
             for detection_id in current_cfd_detections:
                 self.notification_queue.append(detection_id)
+
+            cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
 
             # Display the resulting frame
             if show_output:
@@ -218,5 +225,5 @@ if __name__ == '__main__':
 
     detector = Detector(detection_pipeline)
 
-    detections = detector.detect_feed(0, show_output=True)
-    #detections = detector.detect_video('/home/arian/ruta.mp4', show_output=True)
+    #detections = detector.detect_feed(0, show_output=True)
+    detections = detector.detect_video('/home/arian/ruta.mp4', show_output=True)
