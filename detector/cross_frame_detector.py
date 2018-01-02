@@ -53,5 +53,8 @@ class CrossFrameDetector:
 
     def get_detections(self):
         # Get ids of the classes detected by the CFD
-        detected_classes_ids = np.where(self.detection_mask > 0)[0]
-        return detected_classes_ids.tolist()
+        print(self.detection_mask)
+        all_detected_classes_ids = np.where(self.detection_mask > 0)[0].tolist()
+        current_detected_classes_ids =  np.where(self.detection_mask == 2)[0].tolist()
+
+        return all_detected_classes_ids, current_detected_classes_ids
