@@ -62,6 +62,7 @@ class Detector:
     def detect_video_feed(self,
                      video_feed,
                      show_output=False,
+                     sound_notifications=False,
                      output=None):
 
         cap = cv2.VideoCapture(video_feed)
@@ -76,7 +77,10 @@ class Detector:
             cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
-            threading.Thread(target=self.notification_thread, args=()).start()
+            if sound_notifications:
+                sound_thread = threading.Thread(target=self.notification_thread, args=())
+                sound_thread.daemon = True
+                sound_thread.start()
 
         while(True):
             # Capture frame-by-frame
@@ -92,8 +96,9 @@ class Detector:
 
             all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
 
-            for detection_id in current_cfd_detections:
-                self.notification_queue.append(detection_id)
+            if sound_notifications:
+                for detection_id in current_cfd_detections:
+                    self.notification_queue.append(detection_id)
 
             cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
 
@@ -177,4 +182,4 @@ if __name__ == '__main__':
 
     detector = Detector(detection_pipeline)
 
-    detections = detector.detect_video_feed(0, show_output=True)
+    detections = detector.detect_video_feed(0, show_output=True, sound_notifications=True)
