@@ -3,7 +3,6 @@ import cv2
 import glob
 
 from kivy.app import App
-from kivy.clock import Clock, mainthread
 from kivy.lang import Builder
 from kivy.config import Config
 from kivy.core.window import Window
@@ -28,11 +27,13 @@ monitor = get_monitors()[0]
 screen_w, screen_h = monitor.width, monitor.height
 
 
-# Decetor objects
+# Detector objects
 
+import detector
 from detector.cropper import Cropper
 from detector.localizer import Localizer
 from detector.classifier import Classifier
+from detector.detector import Detector
 from detector.detection_pipeline import DetectionPipeline
 from detector.plotter import Plotter
 
@@ -46,22 +47,14 @@ classifier = Classifier(model_path='../../data/classifier/trafficsigns.json',
                         weights_path='../../data/classifier/trafficsigns.h5',
                         labels_path='../../data/classifier/classes.txt',
                         threshold=0.9)
-detector = DetectionPipeline(localizer, cropper, classifier)
 plotter = Plotter(num_classes=20, bgr=True)
+detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
+detector = Detector(detection_pipeline)
 
+
+# Get tensorflow graph
 import tensorflow as tf
-
 graph = tf.get_default_graph()
-
-
-# OpenCV image to Kivy's Texture
-def convert_to_texture(img):
-    flipped = cv2.flip(img, 0)
-    buf = flipped.tostring()
-    image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
-    image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-
-    return img
 
 
 # Data manager
@@ -98,7 +91,7 @@ class ImageResultScreen(Screen):
             img = cv2.imread(image_path)
 
             # Detect objects in image
-            detections = detector.detect_objects_in_image(img)
+            detections = detector.detect_image(img)
             img = plotter.plot_detections(img,
                                           detections,
                                           draw_confidence=False)
@@ -129,7 +122,7 @@ class FolderResultScreen(Screen):
 
     def detect_image(self, image_path):
         img = cv2.imread(image_path)
-        detections = detector.detect_objects_in_image(img)
+        detections = detector.detect_image(img)
         img = plotter.plot_detections(img,
                                       detections,
                                       draw_confidence=False)
@@ -209,35 +202,14 @@ class VideoResultScreen(Screen):
 
 
     def start_detection_thread(self, video_path):
-        self.process = Process(target=self.detection_thread, args=(video_path,))
+        self.process = threading.Thread(target=self.detection_thread, args=(video_path,))
         self.process.start()
         self.process.join()
 
 
     def detection_thread(self, video_path):
-        cap = cv2.VideoCapture(video_path)
-
-        window_name = 'detections'
-        cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
-        cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
-        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN,
-                              cv2.WINDOW_FULLSCREEN)
-
-        while(True):
-            # Capture frame-by-frame
-            ret, frame = cap.read()
-
-            # Display the resulting frame
-            if not ret:
-                break
-
-            cv2.imshow(window_name, frame)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
+        with graph.as_default():
+            detector.detect_video_feed(video_path, show_output=True, sound_notifications=True)
 
 
 # Define screen manager
