@@ -50,6 +50,6 @@ class TestCrossFrameDetector:
         for _ in range(5):
             cfd.register_detections(test_detections)
 
-        cfr_detections = cfd.get_detections()
+        cfr_detections, _ = cfd.get_detections()
 
         assert cfr_detections == [0, 3]
