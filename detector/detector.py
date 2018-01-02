@@ -18,6 +18,7 @@ from exceptions import FormatNotSupportedException
 from pydub import AudioSegment
 from pydub.playback import play
 
+
 class Detector:
 
     def __init__(self, detection_pipeline):
@@ -31,18 +32,6 @@ class Detector:
         self.classes_images = self.load_classes_images('../data/classifier/classes')
 
         self.notification_queue = []
-
-
-    def notification_thread(self):
-        while True:
-            if len(self.notification_queue) > 0:
-                class_id = self.notification_queue.pop()
-
-                notification_sound = AudioSegment.from_mp3('../data/sounds/notification.mp3')
-                play(notification_sound)
-
-                class_name_sound = AudioSegment.from_mp3('../data/sounds/'+ str(class_id) + '.mp3')
-                play(class_name_sound)
 
 
     def detect_image(self,
@@ -70,12 +59,12 @@ class Detector:
         return detections
 
 
-    def detect_video(self,
-                     video_path,
+    def detect_video_feed(self,
+                     video_feed,
                      show_output=False,
                      output=None):
 
-        cap = cv2.VideoCapture(video_path)
+        cap = cv2.VideoCapture(video_feed)
 
         if show_output:
             from screeninfo import get_monitors
@@ -119,53 +108,16 @@ class Detector:
         cv2.destroyAllWindows()
 
 
-    def detect_feed(self,
-                    feed,
-                    show_output=False,
-                    output=None):
+    def notification_thread(self):
+        while True:
+            if len(self.notification_queue) > 0:
+                class_id = self.notification_queue.pop()
 
-        cap = cv2.VideoCapture(feed)
+                notification_sound = AudioSegment.from_mp3('../data/sounds/notification.mp3')
+                play(notification_sound)
 
-        if show_output:
-            from screeninfo import get_monitors
-            monitor = get_monitors()[0]
-            screen_w, screen_h, = monitor.width, monitor.height
-
-            window_name = 'Detector'
-            cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
-            cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
-            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-
-            threading.Thread(target=self.notification_thread, args=()).start()
-
-        while(True):
-            # Capture frame-by-frame
-            ret, frame = cap.read()
-
-            if not ret:
-                break
-
-            detections = self.detection_pipeline.detect_objects_in_image(frame)
-            self.cfd.register_detections(detections)
-
-            frame = self.plotter.plot_detections(frame, detections)
-
-            all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
-
-            for detection_id in current_cfd_detections:
-                self.notification_queue.append(detection_id)
-
-            cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
-
-            # Display the resulting frame
-            if show_output:
-                cv2.imshow(window_name, frame)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
+                class_name_sound = AudioSegment.from_mp3('../data/sounds/'+ str(class_id) + '.mp3')
+                play(class_name_sound)
 
 
     def load_classes_images(self, path):
@@ -225,5 +177,4 @@ if __name__ == '__main__':
 
     detector = Detector(detection_pipeline)
 
-    #detections = detector.detect_feed(0, show_output=True)
-    detections = detector.detect_video('/home/arian/ruta.mp4', show_output=True)
+    detections = detector.detect_video_feed(0, show_output=True)
