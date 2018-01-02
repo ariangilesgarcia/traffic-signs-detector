@@ -1,3 +1,4 @@
+"""
 import json
 import unittest
 
@@ -72,3 +73,4 @@ class TestLogger:
             saved_json = json.load(fp)
 
         assert test_detection == saved_json
+"""
