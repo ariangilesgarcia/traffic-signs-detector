@@ -1,7 +1,7 @@
 import json
 
-from utils import convert_detection_to_csv
-from utils import convert_detection_to_yolo
+from detector.utils import convert_detection_to_csv
+from detector.utils import convert_detection_to_yolo
 
 
 class Logger:
