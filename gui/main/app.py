@@ -212,6 +212,29 @@ class VideoResultScreen(Screen):
             detector.detect_video_feed(video_path, show_output=True, sound_notifications=True)
 
 
+class DetectWebcamScreen(Screen):
+    pass
+
+
+class WebcamResultScreen(Screen):
+
+    def on_enter(self):
+        self.start_detection_thread()
+
+
+    def start_detection_thread(self):
+        thread = threading.Thread(target=self.detection_thread, args=(0,))
+        thread.daemon = True
+        thread.start()
+        thread.join()
+
+
+    def detection_thread(self, feed_path):
+        with graph.as_default():
+            detector.detect_video_feed(feed_path, show_output=True, sound_notifications=True)
+
+
+
 # Define screen manager
 class ScreenManagement(ScreenManager):
     state_data = ObjectProperty(DataManager())
