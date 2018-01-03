@@ -367,6 +367,16 @@ class DetectWebcamScreen(Screen):
     def on_enter(self):
         self.manager.state_data.sound_notifications = False
         self.ids.switch_sound_notifications.active = False
+        self.ids.format_csv.active = False
+        self.ids.format_avi.active = False
+        self.ids.confidence_checkbox = False
+        self.manager.state_data.csv_output = False
+        self.manager.state_data.avi_output = False
+        self.manager.state_data.show_confidence_webcam = False
+
+
+    def save_confidence_choice(self, instance, value):
+        self.manager.state_data.show_confidence_webcam = value
 
 
     def switch_toggle(self, instance, value):
@@ -392,6 +402,12 @@ class DetectWebcamScreen(Screen):
         else:
             error = True
             error_msg = 'Seleccione una entrada de video'
+
+        if self.ids.format_csv.active:
+            self.manager.state_data.csv_output = True
+
+        if self.ids.format_avi.active:
+            self.manager.state_data.avi_output = True
 
         if error:
             box = BoxLayout(orientation='vertical')
@@ -441,20 +457,41 @@ class WebcamResultScreen(Screen):
 
 
     def start_detection_thread(self):
-        thread = threading.Thread(target=self.detection_thread)
+        feed_path = self.manager.state_data.feed_path
+
+        thread = threading.Thread(target=self.detection_thread, args=(feed_path,))
         thread.daemon = True
         thread.start()
         thread.join()
 
 
-    def detection_thread(self):
-        feed_path = self.manager.state_data.feed_path
+    def detection_thread(self, feed_path):
+        show_confidence = self.manager.state_data.show_confidence_webcam
         sound_notifications = self.manager.state_data.sound_notifications
+
+        print('FEED_PATH:', feed_path, type(feed_path))
+
+        save_csv = self.manager.state_data.csv_output
+
+        if save_csv:
+            csv_path = './webcam_results.csv'
+        else:
+            csv_path = None
+
+        save_avi = self.manager.state_data.avi_output
+
+        if save_avi:
+            avi_path = './webcam_results.avi'
+        else:
+            avi_path = None
 
         with graph.as_default():
             detector.detect_video_feed(feed_path,
                                        show_output=True,
-                                       sound_notifications=sound_notifications)
+                                       output=avi_path,
+                                       output_csv=csv_path,
+                                       sound_notifications=sound_notifications,
+                                       show_confidence=show_confidence)
 
 
 # Define screen manager

@@ -676,6 +676,13 @@ ScreenManagement:
                             rows: 2
                             cols: 2
 
+                            CheckBox:
+                                id: confidence_checkbox
+                                on_active:
+                                    root.save_confidence_choice(self, self.active)
+                            Label:
+                                text: 'Mostrar la confianza de las detecciones'
+
                             Label:
                                 text: 'Sonido de notifiaciones'
 
@@ -683,6 +690,26 @@ ScreenManagement:
                                 id: switch_sound_notifications
                                 on_active:
                                     root.switch_toggle(self, self.active)
+
+                    TabbedPanelItem:
+                        text: 'Salida'
+
+                        GridLayout:
+                            cols: 2
+                            rows: 5
+                            size_hint_x: 0.8
+
+                            CheckBox:
+                                id: format_csv
+                            Label:
+                                text: 'Guardar el resultado de la deteccion en formato .CSV'
+
+                            CheckBox:
+                                id: format_avi
+                            Label:
+                                text: 'Guardar el resultado de la deteccion en formato .AVI'
+
+
 
             DetectButton:
                 id: detect_button
