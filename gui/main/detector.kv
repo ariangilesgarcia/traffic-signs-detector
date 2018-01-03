@@ -26,6 +26,14 @@ ScreenManagement:
 # Custom Components
 # -----------------
 
+
+<SettingLabel@Label>:
+    font_size: 24
+    text_size: self.size[0], self.text_size[1]
+
+<SettingCheckBox@CheckBox>:
+    size_hint: 0.1, 1
+
 <RoundedGrayButton@Button>:
     background_color: 0,0,0,0  # the last zero is the critical on, make invisible
     font_size: 25
@@ -186,13 +194,12 @@ ScreenManagement:
                         orientation: 'horizontal'
                         spacing: 50
                         padding: 50
-                        size_hint_x: 0.5
 
-                        CheckBox:
+                        SettingCheckBox:
                             id: confidence_checkbox
                             on_active:
                                 root.save_confidence_choice(self, self.active)
-                        Label:
+                        SettingLabel:
                             text: 'Mostrar la confianza de las detecciones'
 
                 TabbedPanelItem:
@@ -201,40 +208,37 @@ ScreenManagement:
                     GridLayout:
                         cols: 2
                         rows: 5
-                        size_hint_x: 0.6
 
-                        CheckBox:
+                        SettingCheckBox:
                             id: save_results_checkbox
                             on_active:
                                 root.enable_format_checkbox(self, self.active)
-                        Label:
+                        SettingLabel:
                             text: 'Guardar el resultado de la deteccion'
 
-                        CheckBox:
+                        SettingCheckBox:
                             group: 'save_format'
                             id: format_json
-                        Label:
+                        SettingLabel:
                             text: 'Guardar el resultado de la deteccion en formato .JSON'
 
-                        CheckBox:
+                        SettingCheckBox:
                             group: 'save_format'
                             id: format_txt
-                        Label:
+                        SettingLabel:
                             text: 'Guardar el resultado de la deteccion en formato .TXT'
 
-                        CheckBox:
+                        SettingCheckBox:
                             group: 'save_format'
                             id: format_csv
-                        Label:
+                        SettingLabel:
                             text: 'Guardar el resultado de la deteccion en formato .CSV'
 
-                        CheckBox:
+                        SettingCheckBox:
                             group: 'save_format'
                             id: format_jpg
-                        Label:
+                        SettingLabel:
                             text: 'Guardar el resultado de la deteccion en formato .JPG'
-
-
 
 
         BoxLayout:
@@ -483,22 +487,21 @@ ScreenManagement:
                         GridLayout:
                             rows: 2
                             cols: 2
-                            size_hint_x: 0.6
 
-                            CheckBox:
+                            SettingCheckBox:
                                 id: confidence_checkbox
                                 on_active:
                                     root.save_confidence_choice(self, self.active)
-                            Label:
+                            SettingLabel:
                                 text: 'Mostrar la confianza de las detecciones'
-
-                            Label:
-                                text: 'Sonido de notifiaciones'
 
                             Switch:
                                 id: switch_sound_notifications
+                                size_hint: 0.2, 1
                                 on_active:
                                     root.switch_toggle(self, self.active)
+                            SettingLabel:
+                                text: 'Sonido de notifiaciones'
 
                     TabbedPanelItem:
                         text: 'Salida'
@@ -506,16 +509,15 @@ ScreenManagement:
                         GridLayout:
                             cols: 2
                             rows: 5
-                            size_hint_x: 0.8
 
-                            CheckBox:
+                            SettingCheckBox:
                                 id: format_csv
-                            Label:
+                            SettingLabel:
                                 text: 'Guardar el resultado de la deteccion en formato .CSV'
 
-                            CheckBox:
+                            SettingCheckBox:
                                 id: format_avi
-                            Label:
+                            SettingLabel:
                                 text: 'Guardar el resultado de la deteccion en formato .AVI'
 
             Label:
@@ -642,27 +644,20 @@ ScreenManagement:
                             padding: 50
                             spacing: 50
 
-                            Widget:
-                            Label:
-                                text: 'Seleccione una entrada de video'
-                                font_size: 30
-                            Widget:
-
-
-                            CheckBox:
+                            SettingCheckBox:
                                 group: 'input_select'
                                 id: checkbox_input_webcam
-                            Label:
+                            SettingLabel:
                                 text: 'Webcam'
                             TextInput:
                                 hint_text: '0'
                                 input_filter: 'int'
                                 id: text_input_webcam
 
-                            CheckBox:
+                            SettingCheckBox:
                                 group: 'input_select'
                                 id: checkbox_input_url
-                            Label:
+                            SettingLabel:
                                 text: 'URL'
                             TextInput:
                                 hint_text: 'rtsp://192.168.0.102:8554/live.sdp'
@@ -677,39 +672,37 @@ ScreenManagement:
                             rows: 2
                             cols: 2
 
-                            CheckBox:
+                            SettingCheckBox:
                                 id: confidence_checkbox
                                 on_active:
                                     root.save_confidence_choice(self, self.active)
-                            Label:
+                            SettingLabel:
                                 text: 'Mostrar la confianza de las detecciones'
-
-                            Label:
-                                text: 'Sonido de notifiaciones'
 
                             Switch:
                                 id: switch_sound_notifications
+                                size_hint: 0.2, 1
                                 on_active:
                                     root.switch_toggle(self, self.active)
+                            SettingLabel:
+                                text: 'Sonido de notifiaciones'
 
                     TabbedPanelItem:
                         text: 'Salida'
 
                         GridLayout:
                             cols: 2
-                            rows: 5
-                            size_hint_x: 0.8
+                            rows: 2
 
-                            CheckBox:
+                            SettingCheckBox:
                                 id: format_csv
-                            Label:
+                            SettingLabel:
                                 text: 'Guardar el resultado de la deteccion en formato .CSV'
 
-                            CheckBox:
+                            SettingCheckBox:
                                 id: format_avi
-                            Label:
+                            SettingLabel:
                                 text: 'Guardar el resultado de la deteccion en formato .AVI'
-
 
 
             DetectButton:
