@@ -75,21 +75,13 @@ class Detector:
                      output_csv=None):
 
         cap = cv2.VideoCapture(video_feed)
-        #cap.set(cv2.CAP_PROP_FPS, 1)
 
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
 
         if output:
-            start = time.time()
-            ret, frame = cap.read()
-            detections = self.detection_pipeline.detect_objects_in_image(frame)
-            end = time.time()
-
-            elapsed = end - start
-            fps = math.ceil(1/elapsed)
-
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
             out = cv2.VideoWriter(output, fourcc, fps, (width, height))
 
