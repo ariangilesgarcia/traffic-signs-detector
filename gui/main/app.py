@@ -11,6 +11,10 @@ from kivy.graphics.texture import Texture
 from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 
 import sys
 import threading
@@ -183,6 +187,14 @@ class FolderResultScreen(Screen):
 
 class DetectVideoScreen(Screen):
 
+    def on_enter(self):
+        self.manager.state_data.sound_notifications = False
+        self.ids.switch_sound_notifications.active = False
+
+    def switch_toggle(self, instance, value):
+        self.manager.state_data.sound_notifications = value
+
+
     def save_video_path(self):
         self.manager.state_data.video_path = self.ids.filechooser.selection[0]
 
@@ -218,8 +230,70 @@ class DetectWebcamScreen(Screen):
         self.manager.state_data.sound_notifications = False
         self.ids.switch_sound_notifications.active = False
 
+
     def switch_toggle(self, instance, value):
         self.manager.state_data.sound_notifications = value
+
+
+    def check_input_feed(self):
+        error = False
+        feed_path = None
+
+        if self.ids.checkbox_input_webcam.active:
+            if self.ids.text_input_webcam.text is not '':
+                feed_path = int(self.ids.text_input_webcam.text)
+            else:
+                error = True
+                error_msg = 'Ingrese un ID de Webcam'
+        elif self.ids.checkbox_input_url.active:
+            if self.ids.text_input_url.text is not '':
+                feed_path = self.ids.text_input_url.text
+            else:
+                error = True
+                error_msg = 'Ingrese una URL de un feed de video'
+        else:
+            error = True
+            error_msg = 'Seleccione una entrada de video'
+
+        if error:
+            box = BoxLayout(orientation='vertical')
+            error_label = Label(text=error_msg, font_size=50)
+            box.add_widget(error_label)
+            close_button = Button(text='Ok', size_hint=(1, .3))
+            box.add_widget(close_button)
+
+            popup = Popup(title='Ha ocurrido un error', content=box, size_hint=(.5, .5))
+            close_button.bind(on_release=popup.dismiss)
+            popup.open()
+        else:
+            self.manager.state_data.feed_path = feed_path
+
+            cap = cv2.VideoCapture(feed_path)
+            ret, frame = cap.read()
+            cap.release()
+
+            if ret:
+                self.manager.current = 'webcam_result'
+                self.manager.transition.direction = 'left'
+            else:
+                box = BoxLayout(orientation='vertical')
+                error_label = Label(text='No se pudo leer del feed de video', font_size=50)
+                box.add_widget(error_label)
+                close_button = Button(text='Ok', size_hint=(1, .3))
+                box.add_widget(close_button)
+
+                popup = Popup(title='Ha ocurrido un error', content=box, size_hint=(.5, .5))
+                close_button.bind(on_release=popup.dismiss)
+                popup.open()
+
+
+
+    def on_leave(self):
+        self.ids.checkbox_input_webcam.active = False
+        self.ids.text_input_webcam.text = ''
+
+        self.ids.checkbox_input_url.active = False
+        self.ids.text_input_url.text = ''
 
 
 class WebcamResultScreen(Screen):
@@ -229,20 +303,20 @@ class WebcamResultScreen(Screen):
 
 
     def start_detection_thread(self):
-        thread = threading.Thread(target=self.detection_thread, args=(0,))
+        thread = threading.Thread(target=self.detection_thread)
         thread.daemon = True
         thread.start()
         thread.join()
 
 
-    def detection_thread(self, feed_path):
+    def detection_thread(self):
+        feed_path = self.manager.state_data.feed_path
         sound_notifications = self.manager.state_data.sound_notifications
 
         with graph.as_default():
             detector.detect_video_feed(feed_path,
                                        show_output=True,
                                        sound_notifications=sound_notifications)
-
 
 
 # Define screen manager

@@ -188,14 +188,11 @@ ScreenManagement:
             DetectButton:
                 id: detect_button
                 disabled: True
-                
+
                 on_press:
                     root.save_image_path()
                     app.root.current = 'image_result'
                     app.root.transition.direction = 'left'
-
-
-
 
 # -------------------
 # Image Result Screen
@@ -403,19 +400,39 @@ ScreenManagement:
             spacing: 50
             padding: 25
 
-            FileChooserIconView:
-                id: filechooser
-                filters: ['*.mp4', '*.avi']
-                path: '~/'
-                on_selection:
-                    file_label.text = self.selection and self.selection[0] or ''
-                    detect_button.disabled = False
+            BoxLayout:
+                orientation: 'horizontal'
+
+                FileChooserIconView:
+                    id: filechooser
+                    filters: ['*.mp4', '*.avi']
+                    path: '~/'
+                    on_selection:
+                        file_label.text = self.selection and self.selection[0] or ''
+                        detect_button.disabled = False
+
+                TabbedPanel:
+                    do_default_tab: False
+
+                    TabbedPanelItem:
+                        text: 'Preferencias'
+                        GridLayout:
+                            rows: 2
+                            cols: 2
+
+                            Label:
+                                text: 'Sonido de notifiaciones'
+
+                            Switch:
+                                id: switch_sound_notifications
+                                on_active:
+                                    root.switch_toggle(self, self.active)
 
             Label:
                 id: file_label
-                text: ''
+                text: 'Seleccione un archivo de video'
                 halign: 'center'
-                background_color: .4, .77, .17, 1
+                color: .77, .77, .77, 1
                 font_size: 50
                 size_hint: 1, 0.3
 
@@ -522,12 +539,45 @@ ScreenManagement:
 
             BoxLayout:
                 orientation: 'horizontal'
-                spacing: 10
+                spacing: 100
                 padding: 10
 
-                Label:
-                    text: '[font=resources/FontAwesome.otf][size=400][/size][/font]'
-                    markup: True
+                TabbedPanel:
+                    do_default_tab: False
+
+                    TabbedPanelItem:
+                        text: 'Entrada'
+                        GridLayout:
+                            rows: 3
+                            cols: 3
+                            padding: 50
+                            spacing: 50
+
+                            Widget:
+                            Label:
+                                text: 'Seleccione una entrada de video'
+                                font_size: 30
+                            Widget:
+
+
+                            CheckBox:
+                                group: 'input_select'
+                                id: checkbox_input_webcam
+                            Label:
+                                text: 'Webcam'
+                            TextInput:
+                                hint_text: '0'
+                                input_filter: 'int'
+                                id: text_input_webcam
+
+                            CheckBox:
+                                group: 'input_select'
+                                id: checkbox_input_url
+                            Label:
+                                text: 'URL'
+                            TextInput:
+                                hint_text: 'rtsp://192.168.0.102:8554/live.sdp'
+                                id: text_input_url
 
                 TabbedPanel:
                     do_default_tab: False
@@ -548,10 +598,12 @@ ScreenManagement:
 
             DetectButton:
                 id: detect_button
+                disabled: False
 
                 on_press:
-                    app.root.current = 'webcam_result'
-                    app.root.transition.direction = 'left'
+                    root.check_input_feed()
+                    #app.root.current = 'webcam_result'
+                    #app.root.transition.direction = 'left'
 
 
 # --------------------
