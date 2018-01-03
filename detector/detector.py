@@ -73,6 +73,15 @@ class Detector:
 
         cap = cv2.VideoCapture(video_feed)
 
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        if output:
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            out = cv2.VideoWriter(output, fourcc, fps, (width, height))
+
         if show_output:
             from screeninfo import get_monitors
             monitor = get_monitors()[0]
@@ -113,8 +122,14 @@ class Detector:
             if show_output:
                 cv2.imshow(window_name, frame)
 
+            if output:
+                out.write(frame)
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+
+        if output:
+            out.release()
 
         cap.release()
         cv2.destroyAllWindows()
