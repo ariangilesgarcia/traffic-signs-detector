@@ -216,9 +216,9 @@ class DetectWebcamScreen(Screen):
 
     def on_enter(self):
         self.manager.state_data.sound_notifications = False
-        self.ids.checkbox_sound_notifications.active = False
+        self.ids.switch_sound_notifications.active = False
 
-    def checkbox_clicked(self, instance, value):
+    def switch_toggle(self, instance, value):
         self.manager.state_data.sound_notifications = value
 
 
