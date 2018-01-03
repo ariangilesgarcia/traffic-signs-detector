@@ -38,6 +38,7 @@ ScreenManagement:
             size: self.size
             radius: [50,]
 
+
 <BigButton@Button>:
     font_size: 100
     halign: 'center'
@@ -51,6 +52,16 @@ ScreenManagement:
     font_size: 25
     background_color: 1, 0, 0, 1
     background_normal: ''
+    markup: True
+    background_normal: 'resources/button_normal.png'
+    background_down: 'resources/button_down.png'
+
+
+<DetectButton@Button>:
+    text: 'DETECTAR'
+    font_size: 80
+    background_color: 1.0, .28, .28, 1
+    size_hint: (1, .5)
     markup: True
     background_normal: 'resources/button_normal.png'
     background_down: 'resources/button_down.png'
@@ -173,13 +184,11 @@ ScreenManagement:
                 font_size: 50
                 size_hint: 1, 0.3
 
-            BigButton:
-                text: 'DETECTAR'
-                id: detect_button
-                background_color: .4, .77, .17, 1
-                size_hint: 1, 0.3
-                disabled: True
 
+            DetectButton:
+                id: detect_button
+                disabled: True
+                
                 on_press:
                     root.save_image_path()
                     app.root.current = 'image_result'
@@ -285,11 +294,9 @@ ScreenManagement:
                 font_size: 50
                 size_hint: 1, 0.3
 
-            BigButton:
-                text: 'DETECTAR'
+
+            DetectButton:
                 id: detect_button
-                background_color: .4, .77, .17, 1
-                size_hint: 1, 0.3
                 disabled: True
 
                 on_press:
@@ -412,18 +419,14 @@ ScreenManagement:
                 font_size: 50
                 size_hint: 1, 0.3
 
-            BigButton:
-                text: 'DETECTAR'
+            DetectButton:
                 id: detect_button
-                background_color: .4, .77, .17, 1
-                size_hint: 1, 0.3
                 disabled: True
 
                 on_press:
                     root.save_video_path()
                     app.root.current = 'video_result'
                     app.root.transition.direction = 'left'
-
 
 # -------------------
 # Video Result Screen
@@ -517,28 +520,34 @@ ScreenManagement:
             spacing: 100
             padding: 100
 
-
             BoxLayout:
                 orientation: 'horizontal'
                 spacing: 10
                 padding: 10
 
                 Label:
-                    size_hint_x: .8
-                    text: 'Activar sonido de notifiaciones'
+                    text: '[font=resources/FontAwesome.otf][size=400][/size][/font]'
+                    markup: True
 
-                CheckBox:
-                    size_hint_x: .55
-                    id: checkbox_sound_notifications
-                    on_active:
-                        root.checkbox_clicked(self, self.active)
+                TabbedPanel:
+                    do_default_tab: False
 
-            BigButton:
-                text: 'DETECTAR'
+                    TabbedPanelItem:
+                        text: 'Preferencias'
+                        GridLayout:
+                            rows: 2
+                            cols: 2
+
+                            Label:
+                                text: 'Sonido de notifiaciones'
+
+                            Switch:
+                                id: switch_sound_notifications
+                                on_active:
+                                    root.switch_toggle(self, self.active)
+
+            DetectButton:
                 id: detect_button
-                background_color: .4, .77, .17, 1
-                size_hint: 1, 0.3
-                disabled: False
 
                 on_press:
                     app.root.current = 'webcam_result'
