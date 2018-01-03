@@ -213,7 +213,13 @@ class VideoResultScreen(Screen):
 
 
 class DetectWebcamScreen(Screen):
-    pass
+
+    def on_enter(self):
+        self.manager.state_data.sound_notifications = False
+        self.ids.checkbox_sound_notifications.active = False
+
+    def checkbox_clicked(self, instance, value):
+        self.manager.state_data.sound_notifications = value
 
 
 class WebcamResultScreen(Screen):
@@ -230,8 +236,12 @@ class WebcamResultScreen(Screen):
 
 
     def detection_thread(self, feed_path):
+        sound_notifications = self.manager.state_data.sound_notifications
+
         with graph.as_default():
-            detector.detect_video_feed(feed_path, show_output=True, sound_notifications=True)
+            detector.detect_video_feed(feed_path,
+                                       show_output=True,
+                                       sound_notifications=sound_notifications)
 
 
 

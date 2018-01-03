@@ -512,11 +512,26 @@ ScreenManagement:
                 size_hint: 1, 1
 
 
-        GridLayout:
-            rows: 3
-            cols: 1
-            spacing: 50
-            padding: 25
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 100
+            padding: 100
+
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: 10
+                padding: 10
+
+                Label:
+                    size_hint_x: .8
+                    text: 'Activar sonido de notifiaciones'
+
+                CheckBox:
+                    size_hint_x: .55
+                    id: checkbox_sound_notifications
+                    on_active:
+                        root.checkbox_clicked(self, self.active)
 
             BigButton:
                 text: 'DETECTAR'
