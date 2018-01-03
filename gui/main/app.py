@@ -195,16 +195,16 @@ class DetectVideoScreen(Screen):
 class VideoResultScreen(Screen):
 
     def on_enter(self):
-        self.new_frame = None
+        self.start_detection_thread()
 
+
+    def start_detection_thread(self):
         video_path = self.manager.state_data.video_path
-        self.start_detection_thread(video_path)
 
-
-    def start_detection_thread(self, video_path):
-        self.process = threading.Thread(target=self.detection_thread, args=(video_path,))
-        self.process.start()
-        self.process.join()
+        thread = threading.Thread(target=self.detection_thread, args=(video_path,))
+        thread.daemon = True
+        thread.start()
+        thread.join()
 
 
     def detection_thread(self, video_path):
