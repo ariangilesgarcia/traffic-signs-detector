@@ -72,7 +72,8 @@ class Detector:
                      show_output=False,
                      sound_notifications=False,
                      output=None,
-                     output_csv=None):
+                     output_csv=None,
+                     show_confidence=False):
 
         cap = cv2.VideoCapture(video_feed)
 
@@ -128,7 +129,7 @@ class Detector:
 
             self.cfd.register_detections(detections)
 
-            frame = self.plotter.plot_detections(frame, detections)
+            frame = self.plotter.plot_detections(frame, detections, draw_confidence=show_confidence)
 
             all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
 
