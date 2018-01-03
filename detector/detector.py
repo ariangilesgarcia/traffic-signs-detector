@@ -36,7 +36,8 @@ class Detector:
 
     def detect_image(self,
                      image,
-                     output=None):
+                     output=None,
+                     show_confidence=True):
 
         detections = self.detection_pipeline.detect_objects_in_image(image)
 
@@ -51,7 +52,7 @@ class Detector:
             elif extension == '.csv':
                 self.logger.save_detections_to_csv(detections, output)
             elif extension == '.jpg':
-                detections_image = self.plotter.plot_detections(image, detections)
+                detections_image = self.plotter.plot_detections(image, detections, show_confidence=show_confidence)
                 cv2.imwrite(output, detections_image)
             else:
                 raise FormatNotSupportedException('Output extension must be .json .txt .csv or .jpg')
