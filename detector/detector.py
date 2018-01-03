@@ -2,6 +2,8 @@ import os
 import cv2
 import glob
 import json
+import time
+import math
 import threading
 import numpy as np
 
@@ -69,18 +71,32 @@ class Detector:
                      video_feed,
                      show_output=False,
                      sound_notifications=False,
-                     output=None):
+                     output=None,
+                     output_csv=None):
 
         cap = cv2.VideoCapture(video_feed)
+        #cap.set(cv2.CAP_PROP_FPS, 1)
 
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = int(cap.get(cv2.CAP_PROP_FPS))
         frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
         if output:
+            start = time.time()
+            ret, frame = cap.read()
+            detections = self.detection_pipeline.detect_objects_in_image(frame)
+            end = time.time()
+
+            elapsed = end - start
+            fps = math.ceil(1/elapsed)
+
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
             out = cv2.VideoWriter(output, fourcc, fps, (width, height))
+
+        if output_csv:
+            csv_file = open(output_csv, 'w')
+            titles = ['frame_id', 'class_id', 'x1', 'y1', 'x2', 'y2']
+            csv_file.write(', '.join(titles) + '\n')
 
         if show_output:
             from screeninfo import get_monitors
@@ -98,14 +114,26 @@ class Detector:
                 self.sound_notifications_lock = True
                 sound_thread.start()
 
+        frame_id = 0
+
         while(True):
             # Capture frame-by-frame
             ret, frame = cap.read()
+            frame_id +=1
 
             if not ret:
                 break
 
             detections = self.detection_pipeline.detect_objects_in_image(frame)
+
+            if output_csv:
+                for detection in detections:
+                    class_id = detection['class_id']
+                    coordinates = detection['coordinates']
+
+                    line = ', '.join([str(x) for x in [frame_id, class_id, *coordinates]])
+                    csv_file.write(line + '\n')
+
             self.cfd.register_detections(detections)
 
             frame = self.plotter.plot_detections(frame, detections)
@@ -127,6 +155,9 @@ class Detector:
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+
+        if output_csv:
+            csv_file.close()
 
         if output:
             out.release()
