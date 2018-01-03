@@ -454,13 +454,20 @@ ScreenManagement:
 
 
         BoxLayout:
-            orientation: 'vertical'
+            orientation: 'horizontal'
 
             padding: 100
             spacing: 100
 
             BigButton:
                 background_color: .4, .77, .17, 1
+                padding: (100, 100)
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]VOLVER A\nDETECTAR[/b]')
+                on_release:
+                    root.start_detection_thread()
+
+            BigButton:
+                background_color: .77, .44, .17, 1
                 padding: (100, 100)
                 text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]INICIO[/b]')
                 on_release:
