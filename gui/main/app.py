@@ -263,6 +263,15 @@ class DetectVideoScreen(Screen):
         self.manager.state_data.sound_notifications = False
         self.ids.switch_sound_notifications.active = False
 
+        self.ids.format_csv.active = False
+        self.ids.format_avi.active = False
+
+        self.manager.state_data.csv_output = False
+        self.manager.state_data.avi_output = False
+
+        self.manager.state_data.show_confidence_video = False
+
+
     def switch_toggle(self, instance, value):
         self.manager.state_data.sound_notifications = value
 
@@ -271,9 +280,40 @@ class DetectVideoScreen(Screen):
         self.manager.state_data.video_path = self.ids.filechooser.selection[0]
 
 
+    def save_confidence_choice(self, instance, value):
+        self.manager.state_data.show_confidence_video = value
+
+    def check_video_options(self):
+        error = False
+        feed_path = None
+
+        if self.ids.format_csv.active:
+            self.manager.state_data.csv_output = True
+
+        if self.ids.format_avi.active:
+            self.manager.state_data.avi_output = True
+
+        if error:
+            box = BoxLayout(orientation='vertical')
+            error_label = Label(text=error_msg, font_size=50)
+            box.add_widget(error_label)
+            close_button = Button(text='Ok', size_hint=(1, .3))
+            box.add_widget(close_button)
+
+            popup = Popup(title='Ha ocurrido un error', content=box, size_hint=(.5, .5))
+            close_button.bind(on_release=popup.dismiss)
+            popup.open()
+        else:
+            self.manager.current = 'video_result'
+            self.manager.transition.direction = 'left'
+
+
     def on_leave(self):
         self.ids.filechooser.selection = ''
         self.ids.detect_button.disabled = True
+        self.ids.confidence_checkbox.active = False
+        self.ids.format_csv.active = False
+        self.ids.format_avi.active = False
 
 
 class VideoResultScreen(Screen):
@@ -292,8 +332,34 @@ class VideoResultScreen(Screen):
 
 
     def detection_thread(self, video_path):
+        show_confidence = self.manager.state_data.show_confidence_video
+        sound_notifications = self.manager.state_data.sound_notifications
+
+        save_csv = self.manager.state_data.csv_output
+        if save_csv:
+            if type(video_path) == int:
+                csv_path = './webcam_results.csv'
+            else:
+                csv_path = video_path[:-4] + '_results' + '.csv'
+        else:
+            csv_path = None
+
+        save_avi = self.manager.state_data.avi_output
+        if save_avi:
+            if type(video_path) == int:
+                avi_path = './webcam_results.avi'
+            else:
+                avi_path = video_path[:-4] + '_results' + '.avi'
+        else:
+            avi_path = None
+
         with graph.as_default():
-            detector.detect_video_feed(video_path, show_output=True, sound_notifications=True)
+            detector.detect_video_feed(video_path,
+                                       show_output=True,
+                                       output=avi_path,
+                                       output_csv=csv_path,
+                                       sound_notifications=sound_notifications,
+                                       show_confidence=show_confidence)
 
 
 class DetectWebcamScreen(Screen):
