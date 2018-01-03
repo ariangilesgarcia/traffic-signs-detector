@@ -117,6 +117,8 @@ class Detector:
         cv2.waitKey(1)
         cv2.waitKey(1)
 
+        self.cfd.reset()
+
         if sound_notifications:
             self.sound_notifications_lock = False
 
