@@ -76,11 +76,11 @@ class Detector:
             cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
             cv2.moveWindow(window_name, screen_w - 1, screen_h - 1)
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-            #cv2.startWindowThread()
 
             if sound_notifications:
                 sound_thread = threading.Thread(target=self.notification_thread, args=())
                 sound_thread.daemon = True
+                self.sound_notifications_lock = True
                 sound_thread.start()
 
         while(True):
@@ -117,9 +117,12 @@ class Detector:
         cv2.waitKey(1)
         cv2.waitKey(1)
 
+        if sound_notifications:
+            self.sound_notifications_lock = False
+
 
     def notification_thread(self):
-        while True:
+        while self.sound_notifications_lock:
             if len(self.notification_queue) > 0:
                 class_id = self.notification_queue.pop()
 
