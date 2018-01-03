@@ -145,7 +145,7 @@ ScreenManagement:
 
         BoxLayout:
             orientation: 'horizontal'
-            size_hint: 1, .2
+            size_hint: 1, .4
 
             RoundedGrayButton:
                 text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
@@ -162,11 +162,11 @@ ScreenManagement:
                 size_hint: 1, 1
 
 
-        GridLayout:
-            rows: 3
-            cols: 1
+        BoxLayout:
+            orientation: 'horizontal'
             spacing: 50
             padding: 25
+            padding_top: 50
 
             FileChooserIconView:
                 id: filechooser
@@ -176,6 +176,72 @@ ScreenManagement:
                     file_label.text = self.selection and self.selection[0] or ''
                     detect_button.disabled = False
 
+            TabbedPanel:
+                do_default_tab: False
+
+                TabbedPanelItem:
+                    text: 'Preferencias'
+
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        spacing: 50
+                        padding: 50
+                        size_hint_x: 0.5
+
+                        CheckBox:
+                            id: confidence_checkbox
+                            on_active:
+                                root.save_confidence_choice(self, self.active)
+                        Label:
+                            text: 'Mostrar la confianza de las detecciones'
+
+                TabbedPanelItem:
+                    text: 'Salida'
+
+                    GridLayout:
+                        cols: 2
+                        rows: 5
+                        size_hint_x: 0.8
+
+                        CheckBox:
+                            id: save_results_checkbox
+                            on_active:
+                                root.enable_format_checkbox(self, self.active)
+                        Label:
+                            text: 'Guardar el resultado de la deteccion'
+
+                        CheckBox:
+                            group: 'save_format'
+                            id: format_json
+                        Label:
+                            text: 'Guardar el resultado de la deteccion en formato .JSON'
+
+                        CheckBox:
+                            group: 'save_format'
+                            id: format_txt
+                        Label:
+                            text: 'Guardar el resultado de la deteccion en formato .TXT'
+
+                        CheckBox:
+                            group: 'save_format'
+                            id: format_csv
+                        Label:
+                            text: 'Guardar el resultado de la deteccion en formato .CSV'
+
+                        CheckBox:
+                            group: 'save_format'
+                            id: format_jpg
+                        Label:
+                            text: 'Guardar el resultado de la deteccion en formato .JPG'
+
+
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 50
+            padding: 25
+
             Label:
                 id: file_label
                 text: ''
@@ -184,15 +250,15 @@ ScreenManagement:
                 font_size: 50
                 size_hint: 1, 0.3
 
-
             DetectButton:
                 id: detect_button
                 disabled: True
 
                 on_press:
                     root.save_image_path()
-                    app.root.current = 'image_result'
-                    app.root.transition.direction = 'left'
+                    root.check_image_options()
+                    #app.root.current = 'image_result'
+                    #app.root.transition.direction = 'left'
 
 # -------------------
 # Image Result Screen

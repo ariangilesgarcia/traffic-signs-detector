@@ -74,35 +74,107 @@ class MainScreen(Screen):
 
 class DetectImageScreen(Screen):
 
+    def on_enter(self):
+        self.ids.format_json.disabled = True
+        self.ids.format_txt.disabled = True
+        self.ids.format_csv.disabled = True
+        self.ids.format_jpg.disabled = True
+
+        self.manager.state_data.show_confidence_image = False
+        self.manager.state_data.output_format_image = None
+
+
     def save_image_path(self):
         self.manager.state_data.image_path = self.ids.filechooser.selection[0]
+
+
+    def save_confidence_choice(self, instance, value):
+        self.manager.state_data.show_confidence_image = value
+
+
+    def enable_format_checkbox(self, instance, value):
+        if value:
+            self.ids.format_json.disabled = False
+            self.ids.format_txt.disabled = False
+            self.ids.format_csv.disabled = False
+            self.ids.format_jpg.disabled = False
+        else:
+            self.ids.format_json.disabled = True
+            self.ids.format_txt.disabled = True
+            self.ids.format_csv.disabled = True
+            self.ids.format_jpg.disabled = True
+
+
+    def check_image_options(self):
+        error = False
+        feed_path = None
+
+        if self.ids.save_results_checkbox.active:
+            if self.ids.format_json.active:
+                self.manager.state_data.output_format_image = '.json'
+            elif self.ids.format_txt.active:
+                self.manager.state_data.output_format_image = '.txt'
+            elif self.ids.format_csv.active:
+                self.manager.state_data.output_format_image = '.csv'
+            elif self.ids.format_jpg.active:
+                self.manager.state_data.output_format_image = '.jpg'
+            else:
+                error = True
+                error_msg = 'Seleccione un formato de salida'
+
+        if error:
+            box = BoxLayout(orientation='vertical')
+            error_label = Label(text=error_msg, font_size=50)
+            box.add_widget(error_label)
+            close_button = Button(text='Ok', size_hint=(1, .3))
+            box.add_widget(close_button)
+
+            popup = Popup(title='Ha ocurrido un error', content=box, size_hint=(.5, .5))
+            close_button.bind(on_release=popup.dismiss)
+            popup.open()
+        else:
+            self.manager.current = 'image_result'
+            self.manager.transition.direction = 'left'
 
 
     def on_leave(self):
         self.ids.filechooser.selection = ''
         self.ids.detect_button.disabled = True
+        self.ids.confidence_checkbox.active = False
+        self.ids.save_results_checkbox.active = False
+        self.ids.format_json.active = False
+        self.ids.format_txt.active = False
+        self.ids.format_csv.active = False
+        self.ids.format_jpg.active = False
 
 
 class ImageResultScreen(Screen):
 
     def on_enter(self):
-        # Show error if selected
         image_path = self.manager.state_data.image_path
+        show_confidence = self.manager.state_data.show_confidence_image
 
         _, file_extension = os.path.splitext(self.manager.state_data.image_path)
+
+        output_format = self.manager.state_data.output_format_image
+
+        if output_format is not None:
+            output_filename = image_path[:-4] + '_results' + output_format
+        else:
+            output_filename = None
 
         if file_extension in ['.jpg', '.png', '.gif']:
             img = cv2.imread(image_path)
 
             # Detect objects in image
-            detections = detector.detect_image(img)
-            img = plotter.plot_detections(img,
-                                          detections,
-                                          draw_confidence=False)
+            detected_image, detections = detector.detect_image(img,
+                                                               output=output_filename,
+                                                               show_confidence=show_confidence,
+                                                               return_image=True)
 
-            flipped = cv2.flip(img, 0)
+            flipped = cv2.flip(detected_image, 0)
             buf = flipped.tostring()
-            image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
+            image_texture = Texture.create(size=(detected_image.shape[1], detected_image.shape[0]), colorfmt='bgr')
             image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
 
             self.ids.image_results.texture = image_texture
