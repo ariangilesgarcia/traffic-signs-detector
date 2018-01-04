@@ -41,20 +41,31 @@ from detector.detector import Detector
 from detector.detection_pipeline import DetectionPipeline
 from detector.plotter import Plotter
 
+# Cropper
+cropper = Cropper(0.25, force_square=True)
 
 # Create objects
-cropper = Cropper(0.25, force_square=True)
+"""
 localizer = Localizer(cfg_path='../../data/yolo/full/trafficsigns.cfg',
                       weights_path='../../data/yolo/full/trafficsigns.weights',
                       threshold=0.1)
+"""
+
+# Tiny YOLO
+localizer = Localizer(cfg_path='../../data/yolo/tiny/trafficsigns_tiny.cfg',
+                      weights_path='../../data/yolo/tiny/trafficsigns_tiny.weights',
+                      threshold=0.1)
+
+# STUFF
 classifier = Classifier(model_path='../../data/classifier/trafficsigns.json',
                         weights_path='../../data/classifier/trafficsigns.h5',
                         labels_path='../../data/classifier/classes.txt',
                         threshold=0.9)
+
+
 plotter = Plotter(num_classes=20, bgr=True)
 detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 detector = Detector(detection_pipeline)
-
 
 # Get tensorflow graph
 import tensorflow as tf
