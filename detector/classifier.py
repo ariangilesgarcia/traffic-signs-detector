@@ -2,6 +2,8 @@ import cv2
 import keras
 import numpy as np
 
+from detector.exceptions import ValueOutOfBoundsException
+
 class Classifier:
 
     def __init__(self, model_path, weights_path, labels_path, threshold):
@@ -49,3 +51,10 @@ class Classifier:
             }
 
         return prediction
+
+
+    def set_threshold(self, threshold):
+        if threshold >= 0.0 and threshold  <= 1.0:
+            self.threshold = threshold
+        else:
+            raise ValueOutOfBoundsException('Threshold must be a value between 0 and 1')
