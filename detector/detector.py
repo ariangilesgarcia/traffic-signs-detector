@@ -224,17 +224,26 @@ class Detector:
         return frame
 
 
-if __name__ == '__main__':
-    cropper = Cropper(0.25, force_square=True)
-    localizer = Localizer(cfg_path='../data/yolo/full/trafficsigns.cfg',
-                          weights_path='../data/yolo/full/trafficsigns.weights',
-                          threshold=0.1)
-    classifier = Classifier(model_path='../data/classifier/trafficsigns.json',
-                            weights_path='../data/classifier/trafficsigns.h5',
-                            labels_path='../data/classifier/classes.txt',
-                            threshold=0.9)
-    detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
+def create_detector_from_file(cfg_file):
+    with open(cfg_file, 'r') as fp:
+        config = json.load(fp)
 
+    cropper_cfg = config['cropper']
+    cropper = Cropper(cropper_cfg['crop_percent'],
+                      cropper_cfg['force_square'])
+
+    localizer_cfg = config['localizer']
+    localizer = Localizer(localizer_cfg['model'],
+                          localizer_cfg['weights'],
+                          localizer_cfg['threshold'])
+
+    classifier_cfg = config['classifier']
+    classifier = Classifier(classifier_cfg['model'],
+                            classifier_cfg['weights'],
+                            classifier_cfg['labels'],
+                            classifier_cfg['threshold'])
+
+    detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
     detector = Detector(detection_pipeline)
 
-    detections = detector.detect_video_feed(0, show_output=True, sound_notifications=True)
+    return detector
