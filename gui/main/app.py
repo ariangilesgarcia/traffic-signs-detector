@@ -34,38 +34,7 @@ screen_w, screen_h = monitor.width, monitor.height
 # Detector objects
 
 import detector
-from detector.cropper import Cropper
-from detector.localizer import Localizer
-from detector.classifier import Classifier
-from detector.detector import Detector
-from detector.detection_pipeline import DetectionPipeline
-from detector.plotter import Plotter
-
-# Cropper
-cropper = Cropper(0.25, force_square=True)
-
-# Create objects
-"""
-localizer = Localizer(cfg_path='../../data/yolo/full/trafficsigns.cfg',
-                      weights_path='../../data/yolo/full/trafficsigns.weights',
-                      threshold=0.1)
-"""
-
-# Tiny YOLO
-localizer = Localizer(cfg_path='../../data/yolo/tiny/trafficsigns_tiny.cfg',
-                      weights_path='../../data/yolo/tiny/trafficsigns_tiny.weights',
-                      threshold=0.1)
-
-# STUFF
-classifier = Classifier(model_path='../../data/classifier/trafficsigns.json',
-                        weights_path='../../data/classifier/trafficsigns.h5',
-                        labels_path='../../data/classifier/classes.txt',
-                        threshold=0.9)
-
-
-plotter = Plotter(num_classes=20, bgr=True)
-detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
-detector = Detector(detection_pipeline)
+from detector.detector import create_detector_from_file
 
 # Get tensorflow graph
 import tensorflow as tf
@@ -79,6 +48,35 @@ class DataManager(EventDispatcher):
 
 
 # Define app screens
+class ConfigScreen(Screen):
+
+    def save_config_path(self):
+        self.manager.state_data.config_path = '../../cfg/config.json'
+
+
+class LoadConfigScreen(Screen):
+
+    def save_config_path(self):
+        self.manager.state_data.config_path = self.ids.filechooser.selection[0]
+
+
+    def on_leave(self):
+        self.ids.filechooser.selection = ''
+        self.ids.select_button.disabled = True
+
+
+class CreateDetectorScreen(Screen):
+
+    def on_enter(self):
+        cfg_path = self.manager.state_data.config_path
+
+        try:
+            self.manager.state_data.detector = create_detector_from_file(cfg_path)
+            self.manager.current = 'main'
+            self.manager.transition.direction = 'left'
+        except:
+            print('!!! - Error creating detector from file!')
+
 class MainScreen(Screen):
     pass
 
@@ -178,7 +176,7 @@ class ImageResultScreen(Screen):
             img = cv2.imread(image_path)
 
             # Detect objects in image
-            detected_image, detections = detector.detect_image(img,
+            detected_image, detections = self.manager.state_data.detector.detect_image(img,
                                                                output=output_filename,
                                                                show_confidence=show_confidence,
                                                                return_image=True)
@@ -209,7 +207,7 @@ class FolderResultScreen(Screen):
 
     def detect_image(self, image_path):
         img = cv2.imread(image_path)
-        detections = detector.detect_image(img)
+        detections = self.manager.state_data.detector.detect_image(img)
         img = plotter.plot_detections(img,
                                       detections,
                                       draw_confidence=False)
@@ -365,7 +363,7 @@ class VideoResultScreen(Screen):
             avi_path = None
 
         with graph.as_default():
-            detector.detect_video_feed(video_path,
+            self.manager.state_data.detector.detect_video_feed(video_path,
                                        show_output=True,
                                        output=avi_path,
                                        output_csv=csv_path,
@@ -497,7 +495,7 @@ class WebcamResultScreen(Screen):
             avi_path = None
 
         with graph.as_default():
-            detector.detect_video_feed(feed_path,
+            self.manager.state_data.detector.detect_video_feed(feed_path,
                                        show_output=True,
                                        output=avi_path,
                                        output_csv=csv_path,

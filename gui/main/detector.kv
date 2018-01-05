@@ -7,6 +7,11 @@
 ScreenManagement:
     transition: SlideTransition(duration=.5)
 
+    ConfigScreen:
+    LoadConfigScreen:
+
+    CreateDetectorScreen:
+
     MainScreen:
 
     DetectImageScreen:
@@ -25,7 +30,6 @@ ScreenManagement:
 # -----------------
 # Custom Components
 # -----------------
-
 
 <SettingLabel@Label>:
     font_size: 24
@@ -46,7 +50,6 @@ ScreenManagement:
             size: self.size
             radius: [50,]
 
-
 <BigButton@Button>:
     font_size: 100
     halign: 'center'
@@ -54,7 +57,6 @@ ScreenManagement:
     markup: True
     background_normal: 'resources/button_normal.png'
     background_down: 'resources/button_down.png'
-
 
 <MediumButton@Button>:
     font_size: 25
@@ -64,7 +66,6 @@ ScreenManagement:
     background_normal: 'resources/button_normal.png'
     background_down: 'resources/button_down.png'
 
-
 <DetectButton@Button>:
     text: 'DETECTAR'
     font_size: 80
@@ -73,6 +74,158 @@ ScreenManagement:
     markup: True
     background_normal: 'resources/button_normal.png'
     background_down: 'resources/button_down.png'
+
+
+# -------------
+# Config Screen
+# -------------
+
+<ConfigScreen>:
+    name: 'config'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .2
+
+            Label:
+                text: '[b]DETECTOR DE OBJETOS[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, 1
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 50
+            padding: 25
+
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: 50
+                padding: 25
+
+                BigButton:
+                    background_color: 0, .5, 1, 1
+                    text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CARGAR\nCONFIGURACION[/b]')
+                    font_size: 60
+                    on_release:
+                        app.root.current = 'load_config'
+                        app.root.transition.direction = 'left'
+
+                BigButton:
+                    background_color: 1, .0, .5, 1
+                    text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]NUEVA\nCONFIGURACION[/b]')
+                    font_size: 60
+                    #on_release:
+                        #app.root.current = 'detect_folder'
+                        #app.root.transition.direction = 'left'
+
+            BigButton:
+                background_color: .95, .83, 0.26, 1
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CONFIGURACION POR DEFECTO[/b]')
+                font_size: 80
+                on_release:
+                    root.save_config_path()
+                    app.root.current = 'create_detector'
+                    app.root.transition.direction = 'left'
+
+
+# ------------------
+# Load Config Screen
+# ------------------
+
+<LoadConfigScreen>:
+    name: 'load_config'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .2
+
+            RoundedGrayButton:
+                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
+                size_hint: .1, 1
+                on_release:
+                    app.root.current = 'config'
+                    app.root.transition.direction = 'right'
+
+            Label:
+                text: '[b]SELECCIONAR ARCHIVO[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 50
+            padding: 25
+
+            FileChooserIconView:
+                id: filechooser
+                filters: ['*.json']
+                path: '~/'
+                on_selection:
+                    config_file_label.text = self.selection and self.selection[0] or ''
+                    select_button.disabled = False
+
+            Label:
+                text: 'Seleccione un archivo de configuración'
+                id: config_file_label
+                font_size: 60
+                size_hint: 1, .3
+
+            BigButton:
+                text: ('SELECCIONAR')
+                size_hint: 1, .5
+                background_color: 0.2, 0.5, 0.2, 1
+                id: select_button
+                disabled: True
+                on_release:
+                    root.save_config_path()
+                    app.root.current = 'create_detector'
+                    app.root.transition.direction = 'left'
+
+
+# -----------------------
+# Creaet Detector Screen
+# ----------------------
+
+<CreateDetectorScreen>:
+    name: 'create_detector'
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        padding: 25
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 100
+            padding: 200
+
+            Image:
+                source: 'resources/loading.jpg'
+
+            Label:
+                text: '[b]CREANDO DETECTOR[/b]'
+                markup: True
+                color: .85, .85, .85, 1
+                font_size: 120
+                size_hint: 1, .2
 
 
 # -----------
