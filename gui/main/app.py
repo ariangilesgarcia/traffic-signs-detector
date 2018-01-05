@@ -207,20 +207,12 @@ class FolderResultScreen(Screen):
 
     def detect_image(self, image_path):
         img = cv2.imread(image_path)
-        detections = self.manager.state_data.detector.detect_image(img)
-        img = plotter.plot_detections(img,
-                                      detections,
-                                      draw_confidence=False)
+        output_filename = os.path.join('/home/arian/Output', image_path[:-4] + '.jpg')
 
-        flipped = cv2.flip(img, 0)
-        buf = flipped.tostring()
-        image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
-        image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-
-        image_filename = os.path.basename(image_path)
-        output_path = os.path.join('/home/arian/Output', image_filename)
-        cv2.imwrite(output_path, img)
-
+        detected_image, detections = self.manager.state_data.detector.detect_image(img,
+                                                           output=output_filename,
+                                                           show_confidence=False,
+                                                           return_image=True)
 
     def on_enter(self):
         self.on_screen = True
