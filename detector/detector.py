@@ -39,7 +39,7 @@ class Detector:
     def detect_image(self,
                      image,
                      output=None,
-                     show_confidence=True,
+                     show_confidence=False,
                      return_image=False):
 
         detections = self.detection_pipeline.detect_objects_in_image(image)
