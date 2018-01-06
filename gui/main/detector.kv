@@ -100,37 +100,23 @@ ScreenManagement:
                 font_size: 120
                 size_hint: 1, 1
 
-
         BoxLayout:
-            orientation: 'vertical'
+            orientation: 'horizontal'
             spacing: 50
             padding: 25
 
-            BoxLayout:
-                orientation: 'horizontal'
-                spacing: 50
-                padding: 25
-
-                BigButton:
-                    background_color: 0, .5, 1, 1
-                    text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CARGAR\nCONFIGURACION[/b]')
-                    font_size: 60
-                    on_release:
-                        app.root.current = 'load_config'
-                        app.root.transition.direction = 'left'
-
-                BigButton:
-                    background_color: 1, .0, .5, 1
-                    text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]NUEVA\nCONFIGURACION[/b]')
-                    font_size: 60
-                    #on_release:
-                        #app.root.current = 'detect_folder'
-                        #app.root.transition.direction = 'left'
+            BigButton:
+                background_color: 0, .5, 1, 1
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CARGAR\nCONFIGURACION[/b]')
+                font_size: 60
+                on_release:
+                    app.root.current = 'load_config'
+                    app.root.transition.direction = 'left'
 
             BigButton:
-                background_color: .95, .83, 0.26, 1
-                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CONFIGURACION POR DEFECTO[/b]')
-                font_size: 80
+                background_color: .3, .7, 0.26, 1
+                text: ('[font=resources/FontAwesome.otf][size=135][/size][/font]\n[b]CONFIGURACION\nPOR DEFECTO[/b]')
+                font_size: 60
                 on_release:
                     root.save_config_path()
                     app.root.current = 'create_detector'
@@ -221,7 +207,7 @@ ScreenManagement:
                 source: 'resources/loading.jpg'
 
             Label:
-                text: '[b]CREANDO DETECTOR[/b]'
+                text: '[b]INICIALIZANDO[/b]'
                 markup: True
                 color: .85, .85, .85, 1
                 font_size: 120
@@ -251,10 +237,6 @@ ScreenManagement:
                 color: .85, .85, .85, 1
                 font_size: 120
                 size_hint: 1, 1
-
-            RoundedGrayButton:
-                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
-                size_hint: .1, 1
 
 
         GridLayout:
@@ -489,40 +471,93 @@ ScreenManagement:
                 size_hint: 1, 1
 
 
-        GridLayout:
-            rows: 3
-            cols: 1
+        BoxLayout:
+            orientation: 'vertical'
             spacing: 50
             padding: 25
 
-            FileChooserIconView:
-                id: filechooser_folder
-                path: '~/'
-                dirselect: True
-                filters: [root.is_dir]
-                on_selection:
-                    file_label.text = self.selection and self.selection[0] or ''
-                    detect_button.disabled = False
+            BoxLayout:
+                orientation: 'horizontal'
+                spacing: 50
+                padding: 25
 
-            Label:
-                id: file_label
-                text: ''
-                halign: 'center'
-                background_color: .4, .77, .17, 1
-                font_size: 50
-                size_hint: 1, 0.3
+                FileChooserIconView:
+                    id: filechooser_folder
+                    path: '~/'
+                    dirselect: True
+                    filters: [root.is_dir]
+                    on_selection:
+                        detect_button.disabled = False
+                        root.save_folder_path()
 
+                TabbedPanel:
+                    do_default_tab: False
+
+                    TabbedPanelItem:
+                        text: 'Salida'
+
+                        BoxLayout:
+                            orientation: 'vertical'
+
+                            BoxLayout:
+                                orientation: 'horizontal'
+                                size_hint: 1, .2
+
+                                SettingCheckBox:
+                                    id: output_folder_chechbox
+                                    on_active:
+                                        root.enable_output_folder(self, self.active)
+
+                                SettingLabel:
+                                    text: 'Guardar el resultado en otro destino'
+
+                            FileChooserIconView:
+                                id: output_filechooser_folder
+                                path: '~/'
+                                dirselect: True
+                                filters: [root.is_dir]
+                                disabled: True
+                                on_selection:
+                                    root.save_output_path()
+
+                    TabbedPanelItem:
+                        text: 'Formatos'
+
+                        GridLayout:
+                            cols: 2
+                            rows: 4
+
+                            SettingCheckBox:
+                                group: 'save_format'
+                                id: format_json
+                                active: True
+                            SettingLabel:
+                                text: 'Guardar el resultado de la deteccion en formato .JSON'
+
+                            SettingCheckBox:
+                                group: 'save_format'
+                                id: format_txt
+                            SettingLabel:
+                                text: 'Guardar el resultado de la deteccion en formato .TXT'
+
+                            SettingCheckBox:
+                                group: 'save_format'
+                                id: format_csv
+                            SettingLabel:
+                                text: 'Guardar el resultado de la deteccion en formato .CSV'
+
+                            SettingCheckBox:
+                                group: 'save_format'
+                                id: format_jpg
+                            SettingLabel:
+                                text: 'Guardar el resultado de la deteccion en formato .JPG'
 
             DetectButton:
                 id: detect_button
                 disabled: True
 
                 on_press:
-                    root.save_folder_path()
-                    filechooser_folder.selection = ''
-                    detect_button.disabled = True
-                    app.root.current = 'folder_result'
-                    app.root.transition.direction = 'left'
+                    root.check_folder_options()
 
 
 # --------------------
@@ -707,13 +742,6 @@ ScreenManagement:
             orientation: 'horizontal'
             size_hint: 1, .2
 
-            RoundedGrayButton:
-                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
-                size_hint: .1, 1
-                on_release:
-                    app.root.current = 'main'
-                    app.root.transition.direction = 'right'
-
             Label:
                 text: '[b]RESULTADOS[/b]'
                 markup: True
@@ -886,12 +914,6 @@ ScreenManagement:
             orientation: 'horizontal'
             size_hint: 1, .2
 
-            RoundedGrayButton:
-                text: ('[font=resources/FontAwesome.otf][size=100][/size][/font]')
-                size_hint: .1, 1
-                on_release:
-                    app.root.current = 'main'
-                    app.root.transition.direction = 'right'
 
             Label:
                 text: '[b]RESULTADOS[/b]'

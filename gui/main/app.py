@@ -195,24 +195,89 @@ class ImageResultScreen(Screen):
 
 class DetectFolderScreen(Screen):
 
+    def on_enter(self):
+        self.manager.state_data.output_format_image = None
+        self.manager.state_data.output_folder_path = None
+
+
+
     def is_dir(self, directory, filename):
         return os.path.isdir(os.path.join(directory, filename))
+
+
+    def enable_output_folder(self, instance, value):
+        if value:
+            self.ids.output_filechooser_folder.disabled = False
+        else:
+            self.ids.output_filechooser_folder.disabled = True
 
 
     def save_folder_path(self):
         self.manager.state_data.folder_path = self.ids.filechooser_folder.selection[0]
 
 
+    def save_output_path(self):
+        self.manager.state_data.output_folder_path = self.ids.output_filechooser_folder.selection[0]
+
+
+    def check_folder_options(self):
+        """
+        root.save_folder_path()
+        filechooser_folder.selection = ''
+        app.root.current = 'folder_result'
+        app.root.transition.direction = 'left'
+        """
+
+        error = False
+        folder_path = None
+
+
+        if self.ids.format_json.active:
+            self.manager.state_data.output_format_folder = '.json'
+        elif self.ids.format_txt.active:
+            self.manager.state_data.output_format_folder = '.txt'
+        elif self.ids.format_csv.active:
+            self.manager.state_data.output_format_folder = '.csv'
+        elif self.ids.format_jpg.active:
+            self.manager.state_data.output_format_folder = '.jpg'
+        else:
+            error = True
+            error_msg = 'Seleccione un formato de salida'
+
+
+        if self.ids.output_folder_chechbox.active:
+            if self.manager.state_data.output_folder_path is None:
+                error = True
+                error_msg = 'Seleccione una carpeta de salida'
+
+        if error:
+            box = BoxLayout(orientation='vertical')
+            error_label = Label(text=error_msg, font_size=50)
+            box.add_widget(error_label)
+            close_button = Button(text='Ok', size_hint=(1, .3))
+            box.add_widget(close_button)
+
+            popup = Popup(title='Ha ocurrido un error', content=box, size_hint=(.5, .5))
+            close_button.bind(on_release=popup.dismiss)
+            popup.open()
+        else:
+            self.manager.current = 'folder_result'
+            self.manager.transition.direction = 'left'
+
+
+    def on_leave(self):
+        self.ids.filechooser_folder.selection = ''
+        self.ids.output_filechooser_folder.selection = ''
+
+        self.ids.detect_button.disabled = True
+
+        self.ids.format_json.active = True
+        self.ids.format_txt.active = False
+        self.ids.format_csv.active = False
+        self.ids.format_jpg.active = False
+
+
 class FolderResultScreen(Screen):
-
-    def detect_image(self, image_path):
-        img = cv2.imread(image_path)
-        output_filename = os.path.join('/home/arian/Output', image_path[:-4] + '.jpg')
-
-        detected_image, detections = self.manager.state_data.detector.detect_image(img,
-                                                           output=output_filename,
-                                                           show_confidence=False,
-                                                           return_image=True)
 
     def on_enter(self):
         self.on_screen = True
@@ -220,10 +285,11 @@ class FolderResultScreen(Screen):
         folder_path = self.manager.state_data.folder_path
 
         images = []
-        for extension in ('*.gif', '*.png', '*.jpg', '*.JPEG'):
+        for extension in ('*.gif', '*.png', '*.jpg'):
             images.extend(glob.glob(os.path.join(folder_path, extension)))
 
         images_count = len(images)
+
         self.ids.progress_bar.max = 0
         self.ids.progress_bar.max = images_count
 
@@ -235,13 +301,21 @@ class FolderResultScreen(Screen):
 
 
     def detection_thread(self, images):
+        output_path = self.manager.state_data.output_folder_path
+        extension = self.manager.state_data.output_format_folder
+
         image_count = len(images)
 
         for image in images:
             global graph
             with graph.as_default():
                 if self.on_screen:
-                    self.detect_image(image)
+                    image_output_basename = os.path.basename(image)[:-4] + extension
+                    output_filename = os.path.join(output_path, image_output_basename)
+
+                    img = cv2.imread(image_path)
+                    self.manager.state_data.detector.detect_image(img, output=output_filename)
+
                     self.ids.progress_bar.value += 1
 
                     percentage = int(self.ids.progress_bar.value / image_count * 100)
