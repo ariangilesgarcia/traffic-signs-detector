@@ -10,43 +10,43 @@ class Classifier:
         with open(model_path, 'r') as json_file:
             model_json = json_file.read()
 
-        self.model = keras.models.model_from_json(model_json)
-        self.model.load_weights(weights_path)
+        self.__classifier_model = keras.models.model_from_json(model_json)
+        self.__classifier_model.load_weights(weights_path)
 
-        self.threshold = threshold
+        self.__threshold = threshold
 
         labels = open(labels_path, 'r').read().strip().split('\n')
 
-        self.class_map = {}
+        self.__class_map = {}
         class_id = 0
 
         for label in labels:
-            self.class_map[class_id] = label
+            self.__class_map[class_id] = label
             class_id += 1
 
-        self.input_size = tuple(self.model.layers[0].get_output_at(0).get_shape().as_list()[1:-1])
+        self.__input_size = tuple(self.__classifier_model.layers[0].get_output_at(0).get_shape().as_list()[1:-1])
 
 
     def classify_image(self, image):
         # Resize image
         image = image[..., ::-1]
-        image = cv2.resize(image, self.input_size)
+        image = cv2.resize(image, self.__input_size)
 
         # Add batch dimension
         image = np.expand_dims(image, axis=0)
 
         # Predict class for image
-        predictions = self.model.predict(image, verbose=False)[0]
+        predictions = self.__classifier_model.predict(image, verbose=False)[0]
         class_id = np.argmax(predictions)
 
         prediction = None
 
         # If the prediction has greater confidence than the threshold
-        if predictions[class_id] > self.threshold:
+        if predictions[class_id] > self.__threshold:
             # Populate the prediction object
             prediction = {
                 'class_id': int(class_id),
-                'label': self.class_map[class_id],
+                'label': self.__class_map[class_id],
                 'confidence': float(predictions[class_id]),
             }
 
@@ -55,6 +55,6 @@ class Classifier:
 
     def set_threshold(self, threshold):
         if threshold >= 0.0 and threshold  <= 1.0:
-            self.threshold = threshold
+            self.__threshold = threshold
         else:
             raise ValueOutOfBoundsException('Threshold must be a value between 0 and 1')

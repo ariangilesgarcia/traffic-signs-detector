@@ -4,8 +4,8 @@ import cv2
 class Cropper:
 
     def __init__(self, crop_percent, force_square=False):
-        self.crop_percent = crop_percent
-        self.force_square = force_square
+        self.__crop_percent = crop_percent
+        self.__force_square = force_square
 
 
     def expand_coordinates(self, original_coordinates, image_size):
@@ -25,8 +25,8 @@ class Cropper:
         size = max(width, height)
 
         # Force square if parameter is set
-        if self.force_square:
-            size = int(size/2 * (1 + self.crop_percent))
+        if self.__force_square:
+            size = int(size/2 * (1 + self.__crop_percent))
 
         # Calculate new coords
         x1 = center_x - size

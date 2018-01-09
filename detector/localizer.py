@@ -11,11 +11,11 @@ class Localizer:
             "summary": None,
         }
 
-        self.localizer_model = TFNet(options)
+        self.__localizer_model = TFNet(options)
 
 
     def find_objects_in_image(self, image):
-        detections = self.localizer_model.return_predict(image)
+        detections = self.__localizer_model.return_predict(image)
 
         new_detections = []
 

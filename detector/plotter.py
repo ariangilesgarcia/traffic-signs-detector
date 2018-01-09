@@ -11,7 +11,7 @@ class Plotter:
         colors = rand_color.generate(luminosity='bright', count=num_classes, format_='rgb')
 
         # Class map dictionary
-        self.class_map = {}
+        self.__class_map = {}
         class_id = 0
 
         # RGB string to R, G, B values
@@ -27,8 +27,8 @@ class Plotter:
             else:
                 class_color = (int(r), int(g), int(b))
 
-            self.class_map[class_id] = {}
-            self.class_map[class_id]['color'] = class_color
+            self.__class_map[class_id] = {}
+            self.__class_map[class_id]['color'] = class_color
 
             class_id += 1
 
@@ -40,7 +40,7 @@ class Plotter:
             label = detection['label']
 
             # Get color for bbox
-            color = self.class_map[label_id]['color']
+            color = self.__class_map[label_id]['color']
             type(color)
 
             # Line thickness

@@ -24,16 +24,16 @@ from pydub.playback import play
 class Detector:
 
     def __init__(self, detection_pipeline):
-        self.detection_pipeline = detection_pipeline
-        self.plotter = Plotter(num_classes=20, bgr=True)
-        self.logger = Logger()
-        self.cfd = CrossFrameDetector(num_classes=20,
+        self.__detection_pipeline = detection_pipeline
+        self.__plotter  = Plotter(num_classes=20, bgr=True)
+        self.__logger = Logger()
+        self.__cfd = CrossFrameDetector(num_classes=20,
                                       frame_history_count=5,
                                       frames_threshold=2)
 
-        self.classes_images = self.load_classes_images('/home/arian/Projects/traffic-signs-detector/data/classifier/classes')
+        self.__classes_images = self.__load_classes_images('/home/arian/Projects/traffic-signs-detector/data/classifier/classes')
 
-        self.notification_queue = []
+        self.__notification_queue = []
 
 
     def detect_image(self,
@@ -42,26 +42,26 @@ class Detector:
                      show_confidence=False,
                      return_image=False):
 
-        detections = self.detection_pipeline.detect_objects_in_image(image)
+        detections = self.__detection_pipeline.detect_objects_in_image(image)
 
         if output:
             filename, extension = os.path.splitext(output)
 
             if extension == '.json':
-                self.logger.save_detections_to_json(detections, output)
+                self.__logger.save_detections_to_json(detections, output)
             elif extension == '.txt':
                 h, w, _ = image.shape
-                self.logger.save_detections_to_yolo(detections, (w, h), output)
+                self.__logger.save_detections_to_yolo(detections, (w, h), output)
             elif extension == '.csv':
-                self.logger.save_detections_to_csv(detections, output)
+                self.__logger.save_detections_to_csv(detections, output)
             elif extension == '.jpg':
-                detections_image = self.plotter.plot_detections(image, detections, draw_confidence=show_confidence)
+                detections_image = self.__plotter .plot_detections(image, detections, draw_confidence=show_confidence)
                 cv2.imwrite(output, detections_image)
             else:
                 raise FormatNotSupportedException('Output extension must be .json .txt .csv or .jpg')
 
         if return_image:
-            detections_image = self.plotter.plot_detections(image, detections, draw_confidence=show_confidence)
+            detections_image = self.__plotter .plot_detections(image, detections, draw_confidence=show_confidence)
             return detections_image, detections
 
         return detections
@@ -102,7 +102,7 @@ class Detector:
             cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
             if sound_notifications:
-                sound_thread = threading.Thread(target=self.notification_thread, args=())
+                sound_thread = threading.Thread(target=self.__notification_thread, args=())
                 sound_thread.daemon = True
                 self.sound_notifications_lock = True
                 sound_thread.start()
@@ -117,7 +117,7 @@ class Detector:
             if not ret:
                 break
 
-            detections = self.detection_pipeline.detect_objects_in_image(frame)
+            detections = self.__detection_pipeline.detect_objects_in_image(frame)
 
             if output_csv:
                 for detection in detections:
@@ -127,17 +127,17 @@ class Detector:
                     line = ', '.join([str(x) for x in [frame_id, class_id, *coordinates]])
                     csv_file.write(line + '\n')
 
-            self.cfd.register_detections(detections)
+            self.__cfd.register_detections(detections)
 
-            frame = self.plotter.plot_detections(frame, detections, draw_confidence=show_confidence)
+            frame = self.__plotter .plot_detections(frame, detections, draw_confidence=show_confidence)
 
-            all_cfd_detections, current_cfd_detections = self.cfd.get_detections()
+            all_cfd_detections, current_cfd_detections = self.__cfd.get_detections()
 
             if sound_notifications:
                 for detection_id in current_cfd_detections:
-                    self.notification_queue.append(detection_id)
+                    self.__notification_queue.append(detection_id)
 
-            cfd_frame = self.draw_cfd_detections(frame, all_cfd_detections)
+            cfd_frame = self.__draw_cfd_detections(frame, all_cfd_detections)
 
             # Display the resulting frame
             if show_output:
@@ -162,16 +162,16 @@ class Detector:
         cv2.waitKey(1)
         cv2.waitKey(1)
 
-        self.cfd.reset()
+        self.__cfd.reset()
 
         if sound_notifications:
             self.sound_notifications_lock = False
 
 
-    def notification_thread(self):
+    def __notification_thread(self):
         while self.sound_notifications_lock:
-            if len(self.notification_queue) > 0:
-                class_id = self.notification_queue.pop()
+            if len(self.__notification_queue) > 0:
+                class_id = self.__notification_queue.pop()
 
                 notification_sound = AudioSegment.from_mp3('/home/arian/Projects/traffic-signs-detector/data/sounds/notification.mp3')
                 play(notification_sound)
@@ -180,7 +180,7 @@ class Detector:
                 play(class_name_sound)
 
 
-    def load_classes_images(self, path):
+    def __load_classes_images(self, path):
         classes_images = {}
 
         images_list = glob.glob(os.path.join(path, '*.jpg'))
@@ -197,7 +197,7 @@ class Detector:
         return classes_images
 
 
-    def draw_cfd_detections(self, frame, cfd_detections):
+    def __draw_cfd_detections(self, frame, cfd_detections):
         cfd_detection_count = len(cfd_detections)
 
         if cfd_detection_count > 0:
@@ -212,7 +212,7 @@ class Detector:
             start_h, start_w = 0, 0
 
             for class_id in cfd_detections:
-                img = self.classes_images[class_id]
+                img = self.__classes_images[class_id]
                 img = cv2.resize(img, (class_image_size, class_image_size))
 
                 end_w = start_w + img.shape[1]
