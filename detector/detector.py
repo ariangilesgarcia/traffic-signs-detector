@@ -82,6 +82,8 @@ class Detector:
         frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         fps = int(cap.get(cv2.CAP_PROP_FPS))
 
+        cap.release()
+
         if output:
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
             out = cv2.VideoWriter(output, fourcc, fps, (width, height))
@@ -110,8 +112,11 @@ class Detector:
         frame_id = 0
 
         while(True):
-            # Capture frame-by-frame
+             # Get feed frame
+            cap = cv2.VideoCapture(video_feed)
             ret, frame = cap.read()
+            cap.release()
+
             frame_id +=1
 
             if not ret:
