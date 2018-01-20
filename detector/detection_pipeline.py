@@ -8,7 +8,7 @@ class DetectionPipeline:
 
 
     def detect_objects_in_image(self, image):
-        object_locations = self.localizer.find_objects_in_image(image)
+        object_locations = self.__localizer.find_objects_in_image(image)
 
         classified_detections = []
 
