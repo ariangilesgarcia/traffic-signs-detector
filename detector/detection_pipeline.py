@@ -1,4 +1,3 @@
-self.__cropper
 
 class DetectionPipeline:
 
