@@ -31,12 +31,12 @@ class CrossFrameDetector:
             detected_object_classes.append(detection['class_id'])
 
         # Move everything one row up and complete the last row with the current detections
-        self.__detection_history= np.roll(self.detection_history, -1, axis=0)
-        self.detection_history[self.__frame_history_count - 1, :] = 0
-        self.detection_history[self.__frame_history_count - 1, detected_object_classes] = 1
+        self.__detection_history= np.roll(self.__detection_history, -1, axis=0)
+        self.__detection_history[self.__frame_history_count - 1, :] = 0
+        self.__detection_history[self.__frame_history_count - 1, detected_object_classes] = 1
 
         # Sum detections over all rows and get de CFD detections
-        frames_sum = np.sum(self.detection_history, axis=0)
+        frames_sum = np.sum(self.__detection_history, axis=0)
         detected_classes_ids = np.where(frames_sum >= self.__frames_threshold)
 
         # If class was not detected, make the mask 1
