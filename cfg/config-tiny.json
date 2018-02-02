@@ -1,0 +1,17 @@
+{
+	"localizer": {
+		"model": "/home/arian/Projects/traffic-signs-detector/data/yolo/tiny/trafficsigns_tiny.cfg",
+		"weights": "/home/arian/Projects/traffic-signs-detector/data/yolo/tiny/trafficsigns_tiny.weights",
+		"threshold": 0.24
+	},
+	"cropper": {
+		"crop_percent": 0.25,
+		"force_square": true
+	},
+	"classifier": {
+		"model": "/home/arian/Projects/traffic-signs-detector/data/classifier/trafficsigns.json",
+		"weights": "/home/arian/Projects/traffic-signs-detector/data/classifier/trafficsigns.h5",
+		"labels": "/home/arian/Projects/traffic-signs-detector/data/classifier/classes.txt",
+		"threshold": 0.9
+	}
+}
