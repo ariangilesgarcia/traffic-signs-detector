@@ -9,7 +9,7 @@ class Localizer:
             "load": weights_path,
             "threshold": threshold,
             "summary": None,
-            "gpu": 1.0,
+            "gpu": .8,
         }
 
         self.__localizer_model = TFNet(options)
