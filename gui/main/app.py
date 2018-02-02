@@ -18,8 +18,6 @@ from kivy.uix.button import Button
 
 import sys
 import threading
-from functools import partial
-from multiprocessing import Process
 
 sys.path.append('../../')
 
@@ -43,8 +41,7 @@ graph = tf.get_default_graph()
 
 # Data manager
 class DataManager(EventDispatcher):
-    image_path = StringProperty()
-    folder_path = StringProperty()
+    pass
 
 
 # Define app screens
@@ -200,7 +197,6 @@ class DetectFolderScreen(Screen):
         self.manager.state_data.output_folder_path = None
 
 
-
     def is_dir(self, directory, filename):
         return os.path.isdir(os.path.join(directory, filename))
 
@@ -213,11 +209,11 @@ class DetectFolderScreen(Screen):
 
 
     def save_folder_path(self):
-        self.manager.state_data.folder_path = self.ids.filechooser_folder.selection[0]
+        self.manager.state_data.folder_path = self.ids.filechooser_folder.selection
 
 
     def save_output_path(self):
-        self.manager.state_data.output_folder_path = self.ids.output_filechooser_folder.selection[0]
+        self.manager.state_data.output_folder_path = self.ids.output_filechooser_folder.selection
 
 
     def check_folder_options(self):
@@ -230,7 +226,6 @@ class DetectFolderScreen(Screen):
 
         error = False
         folder_path = None
-
 
         if self.ids.format_json.active:
             self.manager.state_data.output_format_folder = '.json'
@@ -282,7 +277,7 @@ class FolderResultScreen(Screen):
     def on_enter(self):
         self.on_screen = True
 
-        folder_path = self.manager.state_data.folder_path
+        folder_path = self.manager.state_data.folder_path[0]
 
         images = []
         for extension in ('*.gif', '*.png', '*.jpg'):
@@ -301,7 +296,11 @@ class FolderResultScreen(Screen):
 
 
     def detection_thread(self, images):
-        output_path = self.manager.state_data.output_folder_path
+        if self.manager.state_data.output_folder_path:
+            output_path = self.manager.state_data.output_folder_path[0]
+        else:
+            output_path = self.manager.state_data.folder_path[0]
+
         extension = self.manager.state_data.output_format_folder
 
         image_count = len(images)
@@ -310,10 +309,10 @@ class FolderResultScreen(Screen):
             global graph
             with graph.as_default():
                 if self.on_screen:
-                    image_output_basename = os.path.basename(image)[:-4] + extension
+                    image_output_basename = os.path.basename(image)[:-4] + '_output' + extension
                     output_filename = os.path.join(output_path, image_output_basename)
 
-                    img = cv2.imread(image_path)
+                    img = cv2.imread(image)
                     self.manager.state_data.detector.detect_image(img, output=output_filename)
 
                     self.ids.progress_bar.value += 1
@@ -543,8 +542,6 @@ class WebcamResultScreen(Screen):
     def detection_thread(self, feed_path):
         show_confidence = self.manager.state_data.show_confidence_webcam
         sound_notifications = self.manager.state_data.sound_notifications
-
-        print('FEED_PATH:', feed_path, type(feed_path))
 
         save_csv = self.manager.state_data.csv_output
 
