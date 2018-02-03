@@ -12,6 +12,10 @@ install:
   #- wget aberturasdalum.com.ar:8080/trafficsigns.weights -O data/yolo/full/trafficsigns.weights
   - mkdir tests/data
   - wget http://www.educacionsantacruz.gov.ar/images/Educ_Ambiental/Monte_Leon/PNMonteLeon/imagenes/ruta.jpg -O tests/data/test.jpg
+  - wget http://aberturasdalum.com.ar:8080/trafficsigns.json -O ./tests/data/trafficsigns.json
+  - wget http://aberturasdalum.com.ar:8080/trafficsigns.h5 -O ./tests/data/trafficsigns.h5
+  - wget http://aberturasdalum.com.ar:8080/classes.txt -O ./tests/data/classes.txt
+  - wget http://aberturasdalum.com.ar:8080/test_sq.png -O ./tests/data/test_sq.png
 
 script:
   - pytest --cov=./
