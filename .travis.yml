@@ -4,18 +4,23 @@ python:
   - 3.5.2
 
 install:
+  # Dependencies
   - pip install -r requirements.txt
   - pip install git+https://github.com/thtrieu/darkflow
   - pip install pytest-cov
   - pip install codecov
-  # Test data
-  #- wget aberturasdalum.com.ar:8080/trafficsigns.weights -O data/yolo/full/trafficsigns.weights
+  # Test Data
   - mkdir tests/data
   - wget http://www.educacionsantacruz.gov.ar/images/Educ_Ambiental/Monte_Leon/PNMonteLeon/imagenes/ruta.jpg -O tests/data/test.jpg
+  # Classifier Test Data
   - wget http://aberturasdalum.com.ar:8080/trafficsigns.json -O ./tests/data/trafficsigns.json
   - wget http://aberturasdalum.com.ar:8080/trafficsigns.h5 -O ./tests/data/trafficsigns.h5
   - wget http://aberturasdalum.com.ar:8080/classes.txt -O ./tests/data/classes.txt
   - wget http://aberturasdalum.com.ar:8080/test_sq.png -O ./tests/data/test_sq.png
+  # Localizer Test Data
+  - wget http://aberturasdalum.com.ar:8080/trafficsigns.weights -O ./tests/data/trafficsigns.weights
+  - wget http://aberturasdalum.com.ar:8080/trafficsigns.cfg -O ./tests/data/trafficsigns.cfg
+  - wget http://aberturasdalum.com.ar:8080/test.png -O ./tests/data/test.png
 
 script:
   - pytest --cov=./
