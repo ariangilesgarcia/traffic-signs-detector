@@ -23,7 +23,7 @@ from pydub.playback import play
 
 class Detector:
 
-    def __init__(self, detection_pipeline):
+    def __init__(self, detection_pipeline, classes_images_path='/home/arian/Projects/traffic-signs-detector/data/classifier/classes'):
         self.__detection_pipeline = detection_pipeline
         self.__plotter  = Plotter(num_classes=20, bgr=True)
         self.__logger = Logger()
@@ -31,7 +31,7 @@ class Detector:
                                       frame_history_count=5,
                                       frames_threshold=2)
 
-        self.__classes_images = self.__load_classes_images('/home/arian/Projects/traffic-signs-detector/data/classifier/classes')
+        self.__classes_images = self.__load_classes_images(classes_images_path)
 
         self.__notification_queue = []
 
