@@ -140,3 +140,23 @@ class TestPlotter:
         drawn_image = plt.plot_detections(image, test_detections)
 
         assert drawn_image.shape == image.shape
+
+
+    def test_plot_detections_top_side(self):
+        plt = Plotter(num_classes=20)
+
+        test_detections = [
+            {
+                'coordinates': [0, 0, 250, 400],
+                'confidence': 0.998,
+                'class_id': 16,
+                'label': 'contramano'
+            },
+        ]
+
+        test_image_path = 'tests/data/test.jpg'
+        image = cv2.imread(test_image_path)
+
+        drawn_image = plt.plot_detections(image, test_detections)
+
+        assert drawn_image.shape == image.shape
