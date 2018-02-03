@@ -53,3 +53,31 @@ class TestCrossFrameDetector:
         cfr_detections, _ = cfd.get_detections()
 
         assert cfr_detections == [0, 3]
+
+
+    def test_reset_cfd(self):
+        test_detections = [
+            {
+                'coordinates': [200, 100, 300, 200],
+                'confidence': 0.998,
+                'class_id': 0,
+                'label': 'contramano'
+            },
+            {
+                'coordinates': [300, 500, 800, 900],
+                'confidence': 0.734,
+                'class_id': 3,
+                'label': 'cruce'
+            },
+        ]
+
+        cfd = CrossFrameDetector(num_classes=4, frame_history_count=10, frames_threshold=5)
+
+        for _ in range(5):
+            cfd.register_detections(test_detections)
+
+        cfd.reset()
+
+        cfr_detections, _ = cfd.get_detections()
+
+        assert cfr_detections == []
