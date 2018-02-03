@@ -58,3 +58,7 @@ class Classifier:
             self.__threshold = threshold
         else:
             raise ValueOutOfBoundsException('Threshold must be a value between 0 and 1')
+
+
+    def get_threshold(self):
+        return self.__threshold
