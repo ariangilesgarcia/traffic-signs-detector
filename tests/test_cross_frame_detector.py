@@ -26,7 +26,7 @@ class TestCrossFrameDetector:
         cfd = CrossFrameDetector(num_classes=4, frame_history_count=10, frames_threshold=5)
         cfd.register_detections(test_detections)
 
-        assert cfd.detection_history[-1, 0] == 1 and cfd.detection_history[-1, 3] == 1
+        assert cfd.get_detection_history_matrix()[-1, 0] == 1 and cfd.get_detection_history_matrix()[-1, 3] == 1
 
 
     def test_get_detections(self):

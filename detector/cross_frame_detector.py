@@ -59,6 +59,10 @@ class CrossFrameDetector:
         return all_detected_classes_ids, current_detected_classes_ids
 
 
+    def get_detection_history_matrix(self):
+        return self.__detection_history
+
+
     def reset(self):
         self.__detection_history= np.zeros(shape=(self.__frame_history_count, self.__num_classes))
         self.__detection_mask = np.zeros(shape=(self.__num_classes))
