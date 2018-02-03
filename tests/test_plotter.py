@@ -1,3 +1,4 @@
+import os
 import cv2
 import unittest
 import numpy as np
@@ -33,6 +34,34 @@ class TestPlotter:
         drawn_image = plt.plot_detections(image, test_detections)
 
         assert drawn_image.shape == image.shape
+
+
+
+    def test_save_plot_detections(self):
+        plt = Plotter(num_classes=20)
+
+        test_detections = [
+            {
+                'coordinates': [200, 100, 300, 200],
+                'confidence': 0.998,
+                'class_id': 16,
+                'label': 'contramano'
+            },
+            {
+                'coordinates': [300, 800, 400, 950],
+                'confidence': 0.783,
+                'class_id': 13,
+                'label': 'cocoa'
+            }
+        ]
+
+        test_image_path = 'tests/data/test.jpg'
+        image = cv2.imread(test_image_path)
+
+        output_filename = './tests/data/test_output.jpg'
+        drawn_image = plt.plot_detections(image, test_detections, output=output_filename)
+
+        assert os.path.exists(output_filename) == True
 
 
     def test_plot_detections_bgr(self):
@@ -95,7 +124,7 @@ class TestPlotter:
                 'coordinates': [450, 400, 500, 500],
                 'confidence': 0.998,
                 'class_id': 16,
-                'label': 'contramano'
+                'label': 'test-long-long-long-long-long-long-long-long-long-long-label'
             },
             {
                 'coordinates': [300, 800, 400, 950],
