@@ -3,13 +3,13 @@ from darkflow.net.build import TFNet
 
 class Localizer:
 
-    def __init__(self, cfg_path, weights_path, threshold):
+    def __init__(self, cfg_path, weights_path, threshold, gpu=0.8):
         options = {
             "model": cfg_path,
             "load": weights_path,
             "threshold": threshold,
             "summary": None,
-            "gpu": .8,
+            "gpu": gpu,
         }
 
         self.__localizer_model = TFNet(options)
