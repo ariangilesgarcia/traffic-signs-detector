@@ -167,6 +167,8 @@ class Detector:
         if sound_notifications:
             self.sound_notifications_lock = False
 
+        return True
+
 
     def __notification_thread(self):
         while self.sound_notifications_lock:
