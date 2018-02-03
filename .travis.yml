@@ -21,6 +21,8 @@ install:
   - wget http://aberturasdalum.com.ar:8080/trafficsigns.weights -O ./tests/data/trafficsigns.weights
   - wget http://aberturasdalum.com.ar:8080/trafficsigns.cfg -O ./tests/data/trafficsigns.cfg
   - wget http://aberturasdalum.com.ar:8080/test.png -O ./tests/data/test.png
+  # Configuration File
+  - wget http://aberturasdalum.com.ar:8080/config.json -O ./tests/data/config.json
 
 script:
   - pytest --cov=./
