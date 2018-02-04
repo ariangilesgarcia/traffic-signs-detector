@@ -243,7 +243,8 @@ def create_detector_from_file(cfg_file):
     classifier = Classifier(classifier_cfg['model'],
                             classifier_cfg['weights'],
                             classifier_cfg['labels'],
-                            classifier_cfg['threshold'])
+                            classifier_cfg['threshold'],
+                            classifier_cfg['skip_classes'])
 
     detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
     detector = Detector(detection_pipeline)

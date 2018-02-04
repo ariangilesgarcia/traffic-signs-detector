@@ -12,6 +12,7 @@
 		"model": "/home/arian/Projects/traffic-signs-detector/data/classifier/trafficsigns.json",
 		"weights": "/home/arian/Projects/traffic-signs-detector/data/classifier/trafficsigns.h5",
 		"labels": "/home/arian/Projects/traffic-signs-detector/data/classifier/classes.txt",
-		"threshold": 0.9
+		"threshold": 0.9,
+		"skip_classes": [11, 14]
 	}
 }

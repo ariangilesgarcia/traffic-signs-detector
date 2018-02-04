@@ -6,7 +6,7 @@ from detector.exceptions import ValueOutOfBoundsException
 
 class Classifier:
 
-    def __init__(self, model_path, weights_path, labels_path, threshold):
+    def __init__(self, model_path, weights_path, labels_path, threshold, skip_classes=[]):
         with open(model_path, 'r') as json_file:
             model_json = json_file.read()
 
@@ -14,6 +14,8 @@ class Classifier:
         self.__classifier_model.load_weights(weights_path)
 
         self.__threshold = threshold
+
+        self.__skip_classes = skip_classes
 
         labels = open(labels_path, 'r').read().strip().split('\n')
 
@@ -42,7 +44,7 @@ class Classifier:
         prediction = None
 
         # If the prediction has greater confidence than the threshold
-        if predictions[class_id] > self.__threshold:
+        if predictions[class_id] > self.__threshold and class_id not in self.__skip_classes:
             # Populate the prediction object
             prediction = {
                 'class_id': int(class_id),
