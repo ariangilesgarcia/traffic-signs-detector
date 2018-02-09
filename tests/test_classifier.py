@@ -7,6 +7,7 @@ from detector.classifier import Classifier
 
 class TestClassifier:
 
+    # TC-CSF-01
     def test_classifier(self):
         model_path = './data/classifier/trafficsigns.json'
         weights_path = './data/classifier/trafficsigns.h5'
@@ -22,6 +23,7 @@ class TestClassifier:
         assert prediction['class_id'] == 15
 
 
+    # TC-CSF-02
     def test_set_threshold(self):
         model_path = './data/classifier/trafficsigns.json'
         weights_path = './data/classifier/trafficsigns.h5'
@@ -38,6 +40,7 @@ class TestClassifier:
         assert new_threshold == 0.9
 
 
+    # TC-CSF-03
     def test_out_of_bounds_threshold(self):
         model_path = './data/classifier/trafficsigns.json'
         weights_path = './data/classifier/trafficsigns.h5'

@@ -6,6 +6,7 @@ from detector.localizer import Localizer
 
 class TestLocalizer:
 
+    # TC-LOC-01
     def test_localizer(self):
         cfg_path = './data/yolo/full/trafficsigns.cfg'
         weights_path = './data/yolo/full/trafficsigns.weights'

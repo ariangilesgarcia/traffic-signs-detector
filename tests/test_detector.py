@@ -13,6 +13,7 @@ from detector.detector import create_detector_from_file
 
 class TestDetector:
 
+    # TC-DET-01
     def test_detector_image(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'
@@ -61,6 +62,7 @@ class TestDetector:
         assert detections == true_detections
 
 
+    # TC-DET-02
     def test_detector_image_output_json(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'
@@ -101,6 +103,7 @@ class TestDetector:
         assert os.path.exists(output_filename) == True
 
 
+    # TC-DET-03
     def test_detector_image_output_yolo(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'
@@ -141,6 +144,7 @@ class TestDetector:
         assert os.path.exists(output_filename) == True
 
 
+    # TC-DET-04
     def test_detector_image_output_csv(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'
@@ -181,6 +185,7 @@ class TestDetector:
         assert os.path.exists(output_filename) == True
 
 
+    # TC-DET-05
     def test_detector_image_output_jpg(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'
@@ -221,6 +226,7 @@ class TestDetector:
         assert os.path.exists(output_filename) == True
 
 
+    # TC-DET-06
     def test_detector_video(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'
@@ -267,6 +273,7 @@ class TestDetector:
         assert exit_code == True
 
 
+    # TC-DET-07
     def test_detector_from_file(self):
         # Create detector
         detector = create_detector_from_file('./cfg/example.config.json')

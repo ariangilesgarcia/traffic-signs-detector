@@ -6,6 +6,7 @@ from detector.logger import Logger
 
 class TestLogger:
 
+    # TC-LOG-01
     def test_save_detections_csv(self):
         test_detection = [
             {
@@ -26,7 +27,7 @@ class TestLogger:
 
         assert csv_content == expected_output
 
-
+    # TC-LOG-02
     def test_save_detections_yolo(self):
         test_detection = [
             {
@@ -49,7 +50,7 @@ class TestLogger:
 
         assert yolo_content == expected_output
 
-
+    # TC-LOG-03
     def test_save_detections_json(self):
         test_detection = [
             {

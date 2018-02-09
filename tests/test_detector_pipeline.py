@@ -9,6 +9,7 @@ from detector.detection_pipeline import DetectionPipeline
 
 class TestDetectionPipeline:
 
+    # TC-DPL-01
     def test_detector_pipeline(self):
         # Create Localizer
         cfg_path = './data/yolo/full/trafficsigns.cfg'

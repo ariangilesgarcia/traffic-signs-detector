@@ -9,6 +9,7 @@ from detector.utils import convert_coordinates_to_relative
 class TestUtils:
 
 
+    # TC-UTL-01
     def test_convert_to_csv(self):
         test_detection = {
             'coordinates': [200, 100, 300, 200],
@@ -23,6 +24,7 @@ class TestUtils:
         assert csv_output == expected_output
 
 
+    # TC-UTL-02
     def test_convert_to_csv_with_label(self):
         test_detection = {
             'coordinates': [200, 100, 300, 200],
@@ -37,6 +39,7 @@ class TestUtils:
         assert csv_output == expected_output
 
 
+    # TC-UTL-03
     def test_convert_to_csv_with_confidence(self):
         test_detection = {
             'coordinates': [200, 100, 300, 200],
@@ -51,6 +54,7 @@ class TestUtils:
         assert csv_output == expected_output
 
 
+    # TC-UTL-04
     def test_convert_to_csv_with_label_confidence(self):
         test_detection = {
             'coordinates': [200, 100, 300, 200],
@@ -65,6 +69,7 @@ class TestUtils:
         assert csv_output == expected_output
 
 
+    # TC-UTL-05
     def test_convert_to_yolo(self):
         test_detection = {
             'coordinates': [200, 100, 300, 200],
@@ -81,6 +86,7 @@ class TestUtils:
         assert yolo_output == expected_output
 
 
+    # TC-UTL-06
     def test_convert_yo_relative(self):
         test_bbox = (100, 100, 200, 200)
         test_image_size = (1000, 1000)

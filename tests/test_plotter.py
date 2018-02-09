@@ -9,7 +9,7 @@ from detector.plotter import Plotter
 
 class TestPlotter:
 
-
+    # TC-PLT-01
     def test_plot_detections(self):
         plt = Plotter(num_classes=20)
 
@@ -36,7 +36,7 @@ class TestPlotter:
         assert drawn_image.shape == image.shape
 
 
-
+    # TC-PLT-02
     def test_save_plot_detections(self):
         plt = Plotter(num_classes=20)
 
@@ -64,6 +64,7 @@ class TestPlotter:
         assert os.path.exists(output_filename) == True
 
 
+    # TC-PLT-03
     def test_plot_detections_bgr(self):
         plt = Plotter(num_classes=20, bgr=True)
 
@@ -89,7 +90,7 @@ class TestPlotter:
 
         assert drawn_image.shape == image.shape
 
-
+    # TC-PLT-04
     def test_plot_detections_confidence(self):
         plt = Plotter(num_classes=20)
 
@@ -116,6 +117,7 @@ class TestPlotter:
         assert drawn_image.shape == image.shape
 
 
+    # TC-PLT-05
     def test_plot_detections_right_side(self):
         plt = Plotter(num_classes=20)
 
@@ -142,6 +144,7 @@ class TestPlotter:
         assert drawn_image.shape == image.shape
 
 
+    # TC-PLT-05
     def test_plot_detections_top_side(self):
         plt = Plotter(num_classes=20)
 
