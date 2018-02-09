@@ -11,8 +11,8 @@ class TestDetectionPipeline:
 
     def test_detector_pipeline(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -24,9 +24,9 @@ class TestDetectionPipeline:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/classifier/trafficsigns.json'
+        weights_path = '/data/classifier/trafficsigns.h5'
+        labels_path = '/data/classifier/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)

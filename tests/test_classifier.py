@@ -8,14 +8,14 @@ from detector.classifier import Classifier
 class TestClassifier:
 
     def test_classifier(self):
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/classifier/trafficsigns.json'
+        weights_path = './data/classifier/trafficsigns.h5'
+        labels_path = './data/classifier/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
 
-        img = cv2.imread('./tests/data/test_sq.png')
+        img = cv2.imread('./data/classifier/test_sq.png')
 
         prediction = classifier.classify_image(img)
 
@@ -23,9 +23,9 @@ class TestClassifier:
 
 
     def test_set_threshold(self):
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/classifier/trafficsigns.json'
+        weights_path = './data/classifier/trafficsigns.h5'
+        labels_path = './data/classifier/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -39,9 +39,9 @@ class TestClassifier:
 
 
     def test_out_of_bounds_threshold(self):
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/classifier/trafficsigns.json'
+        weights_path = './data/classifier/trafficsigns.h5'
+        labels_path = './data/classifier/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
