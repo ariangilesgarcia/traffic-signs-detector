@@ -7,8 +7,8 @@ from detector.localizer import Localizer
 class TestLocalizer:
 
     def test_localizer(self):
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -25,4 +25,4 @@ class TestLocalizer:
         ]
         predicted_roi = localizer.find_objects_in_image(img)
 
-        assert true_roi[0]['coordinates'] == predicted_roi[0]['coordinates'] 
+        assert true_roi[0]['coordinates'] == predicted_roi[0]['coordinates']

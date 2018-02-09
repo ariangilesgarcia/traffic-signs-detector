@@ -15,7 +15,7 @@ class TestClassifier:
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
 
-        img = cv2.imread('./data/classifier/test_sq.png')
+        img = cv2.imread('./tests/data/test_sq.png')
 
         prediction = classifier.classify_image(img)
 

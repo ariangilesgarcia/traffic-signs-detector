@@ -25,8 +25,8 @@ class TestDetectionPipeline:
 
         # Create classifier
         model_path = './data/classifier/trafficsigns.json'
-        weights_path = '/data/classifier/trafficsigns.h5'
-        labels_path = '/data/classifier/classes.txt'
+        weights_path = './data/classifier/trafficsigns.h5'
+        labels_path = './data/classifier/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
