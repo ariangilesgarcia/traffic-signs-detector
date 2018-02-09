@@ -1,5 +1,0 @@
-classes = 1
-train = train.txt
-valid = test.txt
-names = /home/arian/ProyectoIntegrador/proyecto-integrador/yolo/tiny/trafficsigns_tiny.names
-backup = backup/

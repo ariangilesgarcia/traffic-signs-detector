@@ -39,7 +39,10 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        detector = Detector(detection_pipeline)
+        images_path = '/data/classifier/classes/'
+        sounds_path = '/data/sounds/'
+
+        detector = Detector(detection_pipeline, images_path, sounds_path)
 
         # Detect on image
         img = cv2.imread('./tests/data/test.png')
