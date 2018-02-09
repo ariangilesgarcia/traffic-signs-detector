@@ -15,8 +15,8 @@ class TestDetector:
 
     def test_detector_image(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -28,9 +28,9 @@ class TestDetector:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/yolo/full/trafficsigns.json'
+        weights_path = './data/yolo/full/trafficsigns.h5'
+        labels_path = './data/yolo/full/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -39,8 +39,8 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        images_path = '/data/classifier/classes/'
-        sounds_path = '/data/sounds/'
+        images_path = './data/classifier/classes/'
+        sounds_path = './data/sounds/'
 
         detector = Detector(detection_pipeline, images_path, sounds_path)
 
@@ -63,8 +63,8 @@ class TestDetector:
 
     def test_detector_image_output_json(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -76,9 +76,9 @@ class TestDetector:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/yolo/full/trafficsigns.json'
+        weights_path = './data/yolo/full/trafficsigns.h5'
+        labels_path = './data/yolo/full/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -87,8 +87,8 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        images_path = '/data/classifier/classes/'
-        sounds_path = '/data/sounds/'
+        images_path = './data/classifier/classes/'
+        sounds_path = './data/sounds/'
 
         detector = Detector(detection_pipeline, images_path, sounds_path)
 
@@ -103,8 +103,8 @@ class TestDetector:
 
     def test_detector_image_output_yolo(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -116,9 +116,9 @@ class TestDetector:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/yolo/full/trafficsigns.json'
+        weights_path = './data/yolo/full/trafficsigns.h5'
+        labels_path = './data/yolo/full/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -127,8 +127,8 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        images_path = '/data/classifier/classes/'
-        sounds_path = '/data/sounds/'
+        images_path = './data/classifier/classes/'
+        sounds_path = './data/sounds/'
 
         detector = Detector(detection_pipeline, images_path, sounds_path)
 
@@ -143,8 +143,8 @@ class TestDetector:
 
     def test_detector_image_output_csv(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -156,9 +156,9 @@ class TestDetector:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/yolo/full/trafficsigns.json'
+        weights_path = './data/yolo/full/trafficsigns.h5'
+        labels_path = './data/yolo/full/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -167,8 +167,8 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        images_path = '/data/classifier/classes/'
-        sounds_path = '/data/sounds/'
+        images_path = './data/classifier/classes/'
+        sounds_path = './data/sounds/'
 
         detector = Detector(detection_pipeline, images_path, sounds_path)
 
@@ -183,8 +183,8 @@ class TestDetector:
 
     def test_detector_image_output_jpg(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -196,9 +196,9 @@ class TestDetector:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/yolo/full/trafficsigns.json'
+        weights_path = './data/yolo/full/trafficsigns.h5'
+        labels_path = './data/yolo/full/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -207,8 +207,8 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        images_path = '/data/classifier/classes/'
-        sounds_path = '/data/sounds/'
+        images_path = './data/classifier/classes/'
+        sounds_path = './data/sounds/'
 
         detector = Detector(detection_pipeline, images_path, sounds_path)
 
@@ -223,8 +223,8 @@ class TestDetector:
 
     def test_detector_video(self):
         # Create Localizer
-        cfg_path = './tests/data/trafficsigns.cfg'
-        weights_path = './tests/data/trafficsigns.weights'
+        cfg_path = './data/yolo/full/trafficsigns.cfg'
+        weights_path = './data/yolo/full/trafficsigns.weights'
         threshold = 0.24
 
         localizer = Localizer(cfg_path, weights_path, threshold, gpu=0.0)
@@ -236,9 +236,9 @@ class TestDetector:
         cropper = Cropper(crop_percent, force_square)
 
         # Create classifier
-        model_path = './tests/data/trafficsigns.json'
-        weights_path = './tests/data/trafficsigns.h5'
-        labels_path = './tests/data/classes.txt'
+        model_path = './data/yolo/full/trafficsigns.json'
+        weights_path = './data/yolo/full/trafficsigns.h5'
+        labels_path = './data/yolo/full/classes.txt'
         threshold = 0.5
 
         classifier = Classifier(model_path, weights_path, labels_path, threshold)
@@ -247,8 +247,8 @@ class TestDetector:
         detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
         # Create detector
-        images_path = '/data/classifier/classes/'
-        sounds_path = '/data/sounds/'
+        images_path = './data/classifier/classes/'
+        sounds_path = './data/sounds/'
 
         detector = Detector(detection_pipeline, images_path, sounds_path)
 
@@ -269,6 +269,6 @@ class TestDetector:
 
     def test_detector_from_file(self):
         # Create detector
-        detector = create_detector_from_file('./tests/data/config.json')
+        detector = create_detector_from_file('./cfg/example.config.json')
 
         assert isinstance(detector, Detector) == True
