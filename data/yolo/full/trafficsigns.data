@@ -1,5 +1,0 @@
-classes = 1
-train = train.txt
-valid = test.txt
-names = /home/arian/Projects/traffic-signs-detector/data/yolo/full/trafficsigns.names
-backup = backup/
