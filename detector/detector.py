@@ -32,6 +32,7 @@ class Detector:
                                       frame_history_count=5,
                                       frames_threshold=2)
 
+        self.__classes_sound_path = classes_sound_path
         self.__classes_images = self.__load_classes_images(classes_images_path)
 
         self.__notification_queue = []
@@ -176,12 +177,12 @@ class Detector:
             if len(self.__notification_queue) > 0:
                 class_id = self.__notification_queue.pop()
 
-                notification_path = os.path.join(classes_sound_path, 'notification.mp3')
+                notification_path = os.path.join(self.__classes_sound_path, 'notification.mp3')
                 notification_sound = AudioSegment.from_mp3(notification_path)
 
                 play(notification_sound)
 
-                class_sound_path = os.path.join(classes_sound_path, str(class_id) + '.mp3')
+                class_sound_path = os.path.join(self.__classes_sound_path, str(class_id) + '.mp3')
                 class_name_sound = AudioSegment.from_mp3(class_sound_path)
 
                 play(class_name_sound)
