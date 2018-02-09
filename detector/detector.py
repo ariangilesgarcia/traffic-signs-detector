@@ -23,7 +23,7 @@ from pydub.playback import play
 
 class Detector:
 
-    def __init__(self, detection_pipeline, classes_images_path='/home/arian/Projects/traffic-signs-detector/data/classifier/classes'):
+    def __init__(self, detection_pipeline, classes_images_path, classes_sound_path):
         self.__detection_pipeline = detection_pipeline
         self.__plotter  = Plotter(num_classes=20, bgr=True)
         self.__logger = Logger()
@@ -175,10 +175,14 @@ class Detector:
             if len(self.__notification_queue) > 0:
                 class_id = self.__notification_queue.pop()
 
-                notification_sound = AudioSegment.from_mp3('/home/arian/Projects/traffic-signs-detector/data/sounds/notification.mp3')
+                notification_path = os.path.join(classes_sound_path, 'notification.mp3')
+                notification_sound = AudioSegment.from_mp3(notification_path)
+
                 play(notification_sound)
 
-                class_name_sound = AudioSegment.from_mp3('/home/arian/Projects/traffic-signs-detector/data/sounds/'+ str(class_id) + '.mp3')
+                class_sound_path = os.path.join(classes_sound_path, str(class_id) + '.mp3')
+                class_name_sound = AudioSegment.from_mp3(class_sound_path)
+
                 play(class_name_sound)
 
 
@@ -247,6 +251,11 @@ def create_detector_from_file(cfg_file):
                             classifier_cfg['skip_classes'])
 
     detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
-    detector = Detector(detection_pipeline)
+
+    detector_cfg = config['detector']
+
+    detector = Detector(detection_pipeline,
+                        detector_cfg['images_path'],
+                        detector_cfg['sounds_path'])
 
     return detector

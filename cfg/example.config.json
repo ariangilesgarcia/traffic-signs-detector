@@ -1,0 +1,22 @@
+{
+	"localizer": {
+		"model": "./data/yolo/full/trafficsigns.cfg",
+		"weights": "./data/yolo/full/trafficsigns.weights",
+		"threshold": 0.24
+	},
+	"cropper": {
+		"crop_percent": 0.25,
+		"force_square": true
+	},
+	"classifier": {
+		"model": "./data/classifier/trafficsigns.json",
+		"weights": "./data/classifier/trafficsigns.h5",
+		"labels": "./data/classifier/classes.txt",
+		"threshold": 0.9,
+		"skip_classes": [11, 14, 17, 18, 19]
+	},
+	"detector": {
+		"images_path": "./data/classifier/classes/",
+		"sounds_path": "./data/sounds/"
+	}
+}

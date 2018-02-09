@@ -8,7 +8,7 @@ from detector.cropper import Cropper
 
 class TestCropper:
 
-
+    # TC-CRP-01
     def test_expand_coordinates_inside(self):
         crop_percent = 0.1
         force_square = False
@@ -31,6 +31,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-02
     def test_expand_coordinates_right_side(self):
         crop_percent = 0.1
         force_square = False
@@ -53,6 +54,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-03
     def test_expand_coordinates_left_side(self):
         crop_percent = 0.1
         force_square = False
@@ -75,6 +77,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-04
     def test_expand_coordinates_top_side(self):
         crop_percent = 0.1
         force_square = False
@@ -97,6 +100,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-05
     def test_expand_coordinates_bottom_side(self):
         crop_percent = 0.1
         force_square = False
@@ -119,6 +123,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-06
     def test_expand_coordinates_square_inside(self):
         crop_percent = 0.1
         force_square = True
@@ -141,6 +146,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-07
     def test_expand_coordinates_square_right_side(self):
         crop_percent = 0.1
         force_square = True
@@ -163,6 +169,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-08
     def test_expand_coordinates_square_left_side(self):
         crop_percent = 0.1
         force_square = True
@@ -185,6 +192,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-09
     def test_expand_coordinates_square_top_side(self):
         crop_percent = 0.1
         force_square = True
@@ -207,6 +215,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-10
     def test_expand_coordinates_square_bottom_side(self):
         crop_percent = 0.1
         force_square = True
@@ -229,6 +238,7 @@ class TestCropper:
         assert expanded_coordinates == expected_coordinates
 
 
+    # TC-CRP-11
     def test_expand_and_crop(self):
         crop_percent = 0.1
         force_square = True

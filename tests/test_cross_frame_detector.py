@@ -7,6 +7,7 @@ from detector.cross_frame_detector import CrossFrameDetector
 
 class TestCrossFrameDetector:
 
+    # TC-CFD-01
     def test_register_detections(self):
         test_detections = [
             {
@@ -29,6 +30,7 @@ class TestCrossFrameDetector:
         assert cfd.get_detection_history_matrix()[-1, 0] == 1 and cfd.get_detection_history_matrix()[-1, 3] == 1
 
 
+    # TC-CFD-02
     def test_get_detections(self):
         test_detections = [
             {
@@ -55,6 +57,7 @@ class TestCrossFrameDetector:
         assert cfr_detections == [0, 3]
 
 
+    # TC-CFD-03
     def test_reset_cfd(self):
         test_detections = [
             {
