@@ -3,3 +3,6 @@ class FormatNotSupportedException(Exception):
 
 class ValueOutOfBoundsException(Exception):
     pass
+
+class InvalidDetectorConfigFile(Exception):
+    pass

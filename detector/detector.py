@@ -16,6 +16,7 @@ from detector.detection_pipeline import DetectionPipeline
 from detector.cross_frame_detector import CrossFrameDetector
 
 from detector.exceptions import FormatNotSupportedException
+from detector.exceptions import InvalidDetectorConfigFile
 
 from pydub import AudioSegment
 from pydub.playback import play
@@ -231,31 +232,35 @@ class Detector:
 
 
 def create_detector_from_file(cfg_file):
-    with open(cfg_file, 'r') as fp:
-        config = json.load(fp)
+    try:
+        with open(cfg_file, 'r') as fp:
+            config = json.load(fp)
 
-    cropper_cfg = config['cropper']
-    cropper = Cropper(cropper_cfg['crop_percent'],
-                      cropper_cfg['force_square'])
+        cropper_cfg = config['cropper']
+        cropper = Cropper(cropper_cfg['crop_percent'],
+                          cropper_cfg['force_square'])
 
-    localizer_cfg = config['localizer']
-    localizer = Localizer(localizer_cfg['model'],
-                          localizer_cfg['weights'],
-                          localizer_cfg['threshold'])
+        localizer_cfg = config['localizer']
+        localizer = Localizer(localizer_cfg['model'],
+                              localizer_cfg['weights'],
+                              localizer_cfg['threshold'])
 
-    classifier_cfg = config['classifier']
-    classifier = Classifier(classifier_cfg['model'],
-                            classifier_cfg['weights'],
-                            classifier_cfg['labels'],
-                            classifier_cfg['threshold'],
-                            classifier_cfg['skip_classes'])
+        classifier_cfg = config['classifier']
+        classifier = Classifier(classifier_cfg['model'],
+                                classifier_cfg['weights'],
+                                classifier_cfg['labels'],
+                                classifier_cfg['threshold'],
+                                classifier_cfg['skip_classes'])
 
-    detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
+        detection_pipeline = DetectionPipeline(localizer, cropper, classifier)
 
-    detector_cfg = config['detector']
+        detector_cfg = config['detector']
 
-    detector = Detector(detection_pipeline,
-                        detector_cfg['images_path'],
-                        detector_cfg['sounds_path'])
+        detector = Detector(detection_pipeline,
+                            detector_cfg['images_path'],
+                            detector_cfg['sounds_path'])
 
-    return detector
+        return detector
+
+    except:
+        raise FormatNotSupportedException('The configuration file does not seems to be valid')
