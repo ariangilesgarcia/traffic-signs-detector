@@ -1,6 +1,7 @@
 # Traffic Signs Detector [![Build Status](https://travis-ci.org/ariaaan/traffic-signs-detector.svg?branch=master)](https://travis-ci.org/ariaaan/traffic-signs-detector) [![codecov](https://codecov.io/gh/ariaaan/traffic-signs-detector/branch/master/graph/badge.svg)](https://codecov.io/gh/ariaaan/traffic-signs-detector)
 
 ## Instalación
+Probado en `python3`.
 
 ### 1. Clonar repositorio.
 ```
@@ -14,29 +15,40 @@ Ubicados en cualquier lugar.
 pip install tensorflow-gpu
 pip install keras
 pip install h5py
+pip install screeninfo # si se va a utilizar con un monitor
 pip install pydub # si se quieren notificaciones sonoras
+
 pip install randomcolor
 ```
 
 Las últimas versiones probadas fueron las siguientes, pero debería funcionar con otras versiones sin problema.
 ```
-tensorflow-gpu==1.5.0
+tensorflow-gpu==1.4.0 # tensorflow 1.5 requiere CUDA 9, 1.4 puede utilizarse con CUDA 8
 Keras==2.1.4
 h5py==2.7.1
 pydub==0.20.0
 randomcolor==0.4.4.5
 ```
 
-#### 2.1. Instalar Darkflow.
+#### 2.2. Instalar Darkflow.
 
 Ubicados en cualquier lugar.
 ```
 git clone https://github.com/thtrieu/darkflow
 cd darkflow/
+pip install cython
 python setup.py build_ext --inplace
 pip install .
 ```
 
+#### 2.3. Instalar OpenCV
+
+Instalar OpenCV desde `pip`
+```
+pip install opencv-contrib-python
+```
+
+O sino, se puede compilar desde el código fuente. Se recomienda seguiras estas [instrucciones](https://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/).
 
 ### 3. Descargar modelos.
 Ubicado en la carpeta principal del proyecto.
