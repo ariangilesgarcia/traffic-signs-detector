@@ -119,6 +119,8 @@ class Detector:
             if not ret:
                 break
 
+            print('\r>> Processing frame Nº {}'.format(frame_id), end='')
+
             detections = self.__detection_pipeline.detect_objects_in_image(frame)
 
             if output_csv:
