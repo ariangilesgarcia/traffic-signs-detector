@@ -18,6 +18,15 @@ pip install pydub # si se quieren notificaciones sonoras
 pip install randomcolor
 ```
 
+Las últimas versiones probadas fueron las siguientes, pero debería funcionar con otras versiones sin problema.
+```
+tensorflow-gpu==1.5.0
+Keras==2.1.4
+h5py==2.7.1
+pydub==0.20.0
+randomcolor==0.4.4.5
+```
+
 #### 2.1. Instalar Darkflow.
 
 Ubicados en cualquier lugar.
@@ -58,3 +67,5 @@ from detector.detector import create_detector_from_file
 detector = create_detector_from_file('<config_path>')
 detector.detect_video_feed('<video_path>', output='output.avi')
 ```
+
+Dejarlo correr un rato o hasta que termine, y revisar el archivo `output.avi` para corroborar el correcto funcionamiento.
