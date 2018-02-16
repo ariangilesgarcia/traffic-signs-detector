@@ -3,11 +3,14 @@ install:
 
 init:
 		# Download data
-		wget detector.ml:8080/data.zip -O data.zip
+		wget 138.197.90.173:8080/data.zip -O data.zip
 		unzip data.zip
 
 		# Configure
 		echo "traffic-sign" > labels.txt
+
+config:
+		python init_config.py
 
 test:
 		pytest --cov=./
