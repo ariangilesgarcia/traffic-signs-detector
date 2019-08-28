@@ -3,7 +3,7 @@ install:
 
 init:
 		# Download data
-		wget 138.197.90.173:8080/data.zip -O data.zip
+		wget https://ariangg.s3-sa-east-1.amazonaws.com/data.zip -O data.zip
 		unzip data.zip
 
 		# Configure
