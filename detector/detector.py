@@ -98,9 +98,10 @@ class Detector:
             csv_file.write(', '.join(titles) + '\n')
 
         if show_output:
-            from screeninfo import get_monitors
-            monitor = get_monitors()[0]
-            screen_w, screen_h, = monitor.width, monitor.height
+            # from screeninfo import get_monitors
+            # monitor = get_monitors()[0]
+            # screen_w, screen_h, = monitor.width, monitor.height
+            screen_w, screen_h, = 1920, 1080
 
             window_name = 'Detector'
             cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)

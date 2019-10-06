@@ -34,7 +34,7 @@ config['localizer']['model'] = os.path.join(yolo_path, 'trafficsigns.cfg')
 config['localizer']['weights'] = os.path.join(yolo_path, 'trafficsigns.weights')
 
 config['classifier']['model'] = os.path.join(classifier_path, 'trafficsigns.json')
-config['classifier']['weights'] = os.path.join(classifier_path, 'trafficsigns.hdf5')
+config['classifier']['weights'] = os.path.join(classifier_path, 'trafficsigns.h5')
 config['classifier']['labels'] = os.path.join(classifier_path, 'classes.txt')
 
 config['detector']['images_path'] = os.path.join(classifier_path, 'classes/')
